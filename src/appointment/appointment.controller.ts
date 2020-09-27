@@ -77,7 +77,7 @@ export class AppointmentController {
       .json({ message: 'Appointment Created', data: response });
   }
 
-  @Post()
+  @Post('patient')
   @Roles('patient')
   @UsePipes(ValidationPipe)
   public async createPatientAppointment(
@@ -109,7 +109,7 @@ export class AppointmentController {
       .json({ message: 'Appointment updated', data: response });
   }
 
-  @Put('/:id')
+  @Put('cancel/:id')
   @Roles('admin', 'doctor', 'patient')
   public async cancel(@Param('id') id: string, @Res() res: Response) {
     const response = await this.appointmentService.cancelAppointment(id);

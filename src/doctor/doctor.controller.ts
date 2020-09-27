@@ -28,7 +28,7 @@ export class DoctorController {
   ) {}
 
   @Get()
-  @Roles('admin')
+  @Roles('admin','patient')
   public async getDoctors(
     @Res() res: Response,
     @Query() query: QueryModel,
@@ -40,7 +40,7 @@ export class DoctorController {
   }
 
   @Get('/:id')
-  @Roles('admin', 'doctor')
+  @Roles('admin', 'doctor','patient')
   public async getById(
     @Param('id') id: string,
     @Res() res: Response,
@@ -51,8 +51,8 @@ export class DoctorController {
       .json({ message: 'Doctor Data', data: response });
   }
 
-  @Get('/:id')
-  @Roles('admin', 'doctor')
+  @Get('department/:id')
+  @Roles('admin', 'doctor','patient')
   public async getDoctorsByDepartmentId(
     @Param('id') id: string,
     @Res() res: Response,

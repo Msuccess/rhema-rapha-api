@@ -57,7 +57,7 @@ let DepartmentController = class DepartmentController {
 };
 __decorate([
     common_1.Get(),
-    role_decorator_1.Roles('admin'),
+    role_decorator_1.Roles('admin', 'patient'),
     __param(0, common_1.Res()),
     __param(1, common_1.Query()),
     __metadata("design:type", Function),

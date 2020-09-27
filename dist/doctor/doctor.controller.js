@@ -59,7 +59,7 @@ let DoctorController = class DoctorController {
 };
 __decorate([
     common_1.Get(),
-    role_decorator_1.Roles('admin'),
+    role_decorator_1.Roles('admin', 'patient'),
     __param(0, common_1.Res()),
     __param(1, common_1.Query()),
     __metadata("design:type", Function),
@@ -68,7 +68,7 @@ __decorate([
 ], DoctorController.prototype, "getDoctors", null);
 __decorate([
     common_1.Get('/:id'),
-    role_decorator_1.Roles('admin', 'doctor'),
+    role_decorator_1.Roles('admin', 'doctor', 'patient'),
     __param(0, common_1.Param('id')),
     __param(1, common_1.Res()),
     __metadata("design:type", Function),
@@ -76,8 +76,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], DoctorController.prototype, "getById", null);
 __decorate([
-    common_1.Get('/:id'),
-    role_decorator_1.Roles('admin', 'doctor'),
+    common_1.Get('department/:id'),
+    role_decorator_1.Roles('admin', 'doctor', 'patient'),
     __param(0, common_1.Param('id')),
     __param(1, common_1.Res()),
     __metadata("design:type", Function),

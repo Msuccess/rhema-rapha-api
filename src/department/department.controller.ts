@@ -27,7 +27,7 @@ export class DepartmentController {
   constructor(private readonly departmentService: DepartmentService) {}
 
   @Get()
-  @Roles('admin')
+  @Roles('admin','patient')
   public async getDepartments(
     @Res() res: Response,
     @Query() query: QueryModel,

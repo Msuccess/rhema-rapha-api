@@ -39,7 +39,7 @@ export class IdentityUserService {
     try {
       return await this.IdentityUserRepository.save(user);
     } catch (error) {
-      return new ResultException(error, HttpStatus.BAD_REQUEST);
+      new ResultException(error, HttpStatus.BAD_REQUEST);
     }
   }
 

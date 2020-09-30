@@ -31,7 +31,7 @@ export class DoctorService {
   public async getByDepartmentId(id: string): Promise<any> {
     try {
       return await this.doctorRepository.find({
-        where: 'departmentId is' + id,
+        where: { departmentId: id },
       });
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);

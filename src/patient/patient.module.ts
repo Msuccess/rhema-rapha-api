@@ -6,7 +6,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PatientRepository } from './patient.repository';
 import { PassportModule } from '@nestjs/passport';
-import { IdentityUserService } from '../authentication/identity-user/identity-user.service';
 
 @Module({
   imports: [

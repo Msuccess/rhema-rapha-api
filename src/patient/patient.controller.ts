@@ -8,9 +8,6 @@ import {
   Query,
   HttpStatus,
   Param,
-  Post,
-  UsePipes,
-  ValidationPipe,
   Body,
   Put,
   Delete,
@@ -49,7 +46,8 @@ export class PatientController {
     @User() user: any,
     @Res() res: Response,
   ): Promise<any> {
-    const response = await this.patientService.getPatient(user.id);
+    const response = await this.patientService.getPatientByEmail(user.email);
+    delete response.password;
     return res
       .status(HttpStatus.OK)
       .json({ message: 'Patient Data', data: response });
@@ -62,6 +60,7 @@ export class PatientController {
     @Res() res: Response,
   ): Promise<any> {
     const response = await this.patientService.getPatient(id);
+    delete response.password;
     return res
       .status(HttpStatus.OK)
       .json({ message: 'Patient Data', data: response });
@@ -95,6 +94,7 @@ export class PatientController {
     @Res() res: Response,
   ): Promise<any> {
     const response = await this.patientService.updatePatient(id, patient);
+
     return res
       .status(HttpStatus.CREATED)
       .json({ message: 'Patient updated', data: response });

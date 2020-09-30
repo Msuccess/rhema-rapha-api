@@ -1,8 +1,10 @@
-import { IsNotEmpty, IsEmail, IsDateString, IsString } from 'class-validator';
+import { IsNotEmpty, IsEmail } from 'class-validator';
 import { UserRole } from '../../shared/user-base.entity';
 
 export class PatientDto {
   public readonly id: string;
+
+  public userId: string;
 
   @IsNotEmpty({ message: 'Date of Birth must be provided' })
   public dateOfBirth: Date;
@@ -28,6 +30,9 @@ export class PatientDto {
   @IsNotEmpty({ message: 'Password must be provided' })
   public password: string;
 
+  gender: string;
+
   public role: UserRole;
+
   public avatar: string;
 }

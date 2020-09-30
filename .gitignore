@@ -4,7 +4,7 @@
 # compiled output
 /node_modules
 ormconfig.json
-
+/dist
 
 # Logs
 logs

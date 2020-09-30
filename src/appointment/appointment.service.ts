@@ -1,3 +1,4 @@
+import { PatientService } from './../patient/patient.service';
 import { AppointmentMailDto } from './dto/appointment_mail.dto';
 import { EmailService } from './../shared/service/email.service';
 import { Injectable, HttpStatus } from '@nestjs/common';
@@ -15,11 +16,16 @@ export class AppointmentService {
     @InjectRepository(AppointmentRepository)
     private readonly appointmentRepository: AppointmentRepository,
     private readonly emailService: EmailService,
+    private readonly patientService: PatientService,
   ) {}
 
-  public async getByUserId(userId: string): Promise<any> {
+  public async getAppointmentByUser(user: any): Promise<any> {
     try {
-      return await this.appointmentRepository.find();
+      const patient = await this.patientService.getPatientByEmail(user.email);
+
+      return await this.appointmentRepository.find({
+        where: { patientId: patient.id },
+      });
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
@@ -37,6 +43,16 @@ export class AppointmentService {
     }
   }
 
+  public async getDoctorAppointment(id: string): Promise<any> {
+    try {
+      return await this.appointmentRepository.find({
+        where: { doctorId: id },
+      });
+    } catch (error) {
+      new ResultException(error, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   public async getAppointment(id: string): Promise<any> {
     try {
       return await this.appointmentRepository.findOne(id);
@@ -44,7 +60,6 @@ export class AppointmentService {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
   }
-
   public async addAppointment(newAppointment: AppointmentDto) {
     try {
       return await this.appointmentRepository.save(newAppointment);

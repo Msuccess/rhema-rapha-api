@@ -17,8 +17,6 @@ export class RegisterDto {
   @IsNotEmpty({ message: 'Password cannot be null' })
   public password: string;
 
-  public avatar: string;
-
   @IsNotEmpty({ message: 'Role cannot be null' })
   public role: string;
 

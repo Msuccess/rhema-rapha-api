@@ -29,6 +29,4 @@ export class DoctorDto {
   public password: string;
 
   public role: UserRole;
-
-  public avatar: string;
 }

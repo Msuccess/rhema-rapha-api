@@ -18,6 +18,5 @@ export class IdentityUserDto {
   @IsNotEmpty({ message: 'password cannot be null' })
   public password: string;
 
-  public avatar: string;
   public role: UserRole;
 }

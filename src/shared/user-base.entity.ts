@@ -48,8 +48,6 @@ export class UserBaseEntity extends BaseEntity {
   @Column({ type: 'varchar', nullable: false, length: '20' })
   role: UserRole;
 
-  avatar: string;
-
   @CreateDateColumn()
   createdAt: string;
 

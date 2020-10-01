@@ -33,6 +33,4 @@ export class PatientDto {
   gender: string;
 
   public role: UserRole;
-
-  public avatar: string;
 }

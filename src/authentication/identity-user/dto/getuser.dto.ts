@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsEmail, Length } from 'class-validator';
+import { IsNotEmpty, IsEmail } from 'class-validator';
 import { UserRole } from 'src/shared/user-base.entity';
 
 export class GetUserDto {
@@ -14,6 +14,5 @@ export class GetUserDto {
   @IsNotEmpty({ message: 'Phone number cannot be null' })
   public readonly phonenumber: string;
 
-  public readonly avatar: string;
   public readonly role: UserRole = UserRole.ADMIN;
 }

@@ -135,7 +135,6 @@ export class AuthenticationService {
       const newUser = new IdentityUserDto();
       newUser.email = req.user.email;
       newUser.fullName = req.user.fullName;
-      newUser.avatar = req.user.picture;
       newUser.role = UserRole.PATIENT;
 
       return this.identityUserService.createUser(newUser);

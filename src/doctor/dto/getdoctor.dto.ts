@@ -26,6 +26,4 @@ export class GetDoctorDto {
   public readonly address: string;
 
   public readonly role: UserRole;
-
-  public readonly avatar: string;
 }

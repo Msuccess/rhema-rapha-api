@@ -19,7 +19,10 @@ export class AppointmentService {
 
   public async getByUserId(userId: string): Promise<any> {
     try {
-      return await this.appointmentRepository.find();
+      return await this.appointmentRepository.find({
+        relations: ['doctor', 'patient'],
+        where: 'patientId is' + userId,
+      });
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }

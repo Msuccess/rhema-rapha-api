@@ -40,7 +40,10 @@ export class DoctorService {
 
   public async getDoctor(id: string): Promise<GetDoctorDto> {
     try {
-      return await this.doctorRepository.findOne(id);
+      return await this.doctorRepository.findOne({
+        where: 'id is' + id,
+        relations: ['department'],
+      });
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }

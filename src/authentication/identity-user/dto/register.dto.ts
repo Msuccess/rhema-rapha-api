@@ -22,7 +22,6 @@ export class RegisterDto {
   @IsNotEmpty({ message: 'Password cannot be null' })
   public password: string;
 
-  @ApiProperty()
   @IsNotEmpty({ message: 'Role cannot be null' })
   public role: string;
 

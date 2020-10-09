@@ -38,5 +38,8 @@ export class PatientDto {
   @IsNotEmpty({ message: 'Password must be provided' })
   public password: string;
 
+  @ApiProperty()
+  gender: string;
+
   public role: UserRole;
 }

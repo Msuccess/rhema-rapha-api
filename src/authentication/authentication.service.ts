@@ -59,7 +59,10 @@ export class AuthenticationService {
 
           if (typeof patientDb === 'object' && patientDb !== null) {
             user.role = UserRole.PATIENT;
-            return this.identityUserService.createUser(user);
+            const userDb = await this.identityUserService.createUser(user);
+
+            patient.userId = userDb.id;
+            return this.patientService.updatePatient(patientDb.id, patientDb);
           }
         case 'doctor':
           const doctor = new DoctorDto();
@@ -114,6 +117,7 @@ export class AuthenticationService {
           dbUser.email,
           dbUser.role,
         );
+        delete dbUser.password;
         return { token, dbUser };
       }
     } catch (error) {
@@ -131,7 +135,6 @@ export class AuthenticationService {
       const newUser = new IdentityUserDto();
       newUser.email = req.user.email;
       newUser.fullName = req.user.fullName;
-      newUser.avatar = req.user.picture;
       newUser.role = UserRole.PATIENT;
 
       return this.identityUserService.createUser(newUser);

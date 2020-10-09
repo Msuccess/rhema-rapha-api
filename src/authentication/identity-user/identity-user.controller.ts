@@ -18,7 +18,8 @@ import { AuthenticationService } from '../authentication.service';
 import { AuthGuard } from '@nestjs/passport';
 import { IdentityUserService } from './identity-user.service';
 import { RegisterDto } from './dto/register.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Authentication')
 @Controller('auth')
 export class IdentityUserController {
   constructor(

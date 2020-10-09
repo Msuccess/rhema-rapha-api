@@ -20,14 +20,16 @@ import { QueryModel } from '../shared/model/query.model';
 import { DepartmentDto } from './dto/department.dto';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Department')
 @Controller('department')
 @UseGuards(AuthGuard(), RoleGuard)
 export class DepartmentController {
   constructor(private readonly departmentService: DepartmentService) {}
 
   @Get()
-  @Roles('admin','patient')
+  @Roles('admin', 'patient')
   public async getDepartments(
     @Res() res: Response,
     @Query() query: QueryModel,

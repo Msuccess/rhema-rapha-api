@@ -22,7 +22,9 @@ import { RoleGuard } from '../authentication/auth-guard/role.guard';
 import { Roles } from '../authentication/auth-guard/role.decorator';
 import { QueryModel } from '../shared/model/query.model';
 import { User } from '../authentication/auth-guard/current-user.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Appointment')
 @Controller('appointment')
 @UseGuards(AuthGuard(), RoleGuard)
 export class AppointmentController {
@@ -109,7 +111,7 @@ export class AppointmentController {
       .json({ message: 'Appointment updated', data: response });
   }
 
-  @Put('cancel/:id')
+  @Get('cancel/:id')
   @Roles('admin', 'doctor', 'patient')
   public async cancel(@Param('id') id: string, @Res() res: Response) {
     const response = await this.appointmentService.cancelAppointment(id);

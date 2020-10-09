@@ -18,7 +18,8 @@ import { DoctorService } from './doctor.service';
 import { DoctorDto } from './dto/doctor.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../authentication/auth-guard/role.guard';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Doctor')
 @Controller('doctor')
 @UseGuards(AuthGuard(), RoleGuard)
 export class DoctorController {
@@ -28,7 +29,7 @@ export class DoctorController {
   ) {}
 
   @Get()
-  @Roles('admin','patient')
+  @Roles('admin', 'patient')
   public async getDoctors(
     @Res() res: Response,
     @Query() query: QueryModel,
@@ -40,7 +41,7 @@ export class DoctorController {
   }
 
   @Get('/:id')
-  @Roles('admin', 'doctor','patient')
+  @Roles('admin', 'doctor', 'patient')
   public async getById(
     @Param('id') id: string,
     @Res() res: Response,
@@ -52,7 +53,7 @@ export class DoctorController {
   }
 
   @Get('department/:id')
-  @Roles('admin', 'doctor','patient')
+  @Roles('admin', 'doctor', 'patient')
   public async getDoctorsByDepartmentId(
     @Param('id') id: string,
     @Res() res: Response,

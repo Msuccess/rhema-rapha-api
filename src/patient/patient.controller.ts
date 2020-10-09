@@ -8,9 +8,6 @@ import {
   Query,
   HttpStatus,
   Param,
-  Post,
-  UsePipes,
-  ValidationPipe,
   Body,
   Put,
   Delete,
@@ -22,7 +19,8 @@ import { RoleGuard } from '../authentication/auth-guard/role.guard';
 import { PatientService } from './patient.service';
 import { Response } from 'express';
 import { User } from '../authentication/auth-guard/current-user.decorator';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Patient')
 @Controller('patient')
 @UseGuards(AuthGuard(), RoleGuard)
 export class PatientController {

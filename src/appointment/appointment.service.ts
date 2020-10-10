@@ -24,7 +24,10 @@ export class AppointmentService {
       const patient = await this.patientService.getPatientByEmail(user.email);
 
       return await this.appointmentRepository.find({
-        where: { patientId: patient.id },
+        where: { 
+          patientId: patient.id,
+          isCanceled:false
+        },
       });
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);

@@ -25,6 +25,19 @@ export class PatientService {
     }
   }
 
+  public async getPatientUserId(id: string){
+    try {
+      return await this.patientRepository.findOne({
+        where: { 
+          userId: id,
+        },
+      });
+    } catch (error) {
+      new ResultException(error, HttpStatus.BAD_REQUEST);
+    }
+    
+  }
+
   public async getPatient(id: string) {
     try {
       return await this.patientRepository.findOne(id);

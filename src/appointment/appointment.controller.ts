@@ -73,7 +73,6 @@ export class AppointmentController {
     @Res() res: Response,
   ) {
     const response = await this.appointmentService.addAppointment(appointment);
-
     return res
       .status(HttpStatus.CREATED)
       .json({ message: 'Appointment Created', data: response });
@@ -87,14 +86,14 @@ export class AppointmentController {
     @Res() res: Response,
     @User() user: IdentityUserDto,
   ) {
-    appointment.patientId = user.id;
-    const response = await this.appointmentService.addAppointment(appointment);
+    const response = await this.appointmentService.addPatientAppointment(user.id,appointment);
 
     return res
       .status(HttpStatus.CREATED)
       .json({ message: 'Appointment Created', data: response });
   }
 
+ 
   @Put('/:id')
   @Roles('admin', 'doctor', 'patient')
   public async update(

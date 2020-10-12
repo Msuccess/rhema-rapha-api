@@ -41,5 +41,7 @@ export class PatientDto {
   @ApiProperty()
   gender: string;
 
+  userId: string;
+
   public role: UserRole;
 }

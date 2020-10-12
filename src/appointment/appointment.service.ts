@@ -21,10 +21,13 @@ export class AppointmentService {
 
   public async getAppointmentByUser(user: any): Promise<any> {
     try {
-      const patient = await this.patientService.getPatientByEmail(user.email);
+      const patient = await this.patientService.getPatientUserId(user.id);
 
       return await this.appointmentRepository.find({
-        where: { patientId: patient.id },
+        where: { 
+          patientId: patient.id,
+          isCanceled:false
+        },
       });
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
@@ -60,13 +63,32 @@ export class AppointmentService {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
   }
+
+
   public async addAppointment(newAppointment: AppointmentDto) {
     try {
+      const patient = await this.patientService.getPatientUserId(newAppointment.patientId);
+      newAppointment.patientId = patient.id;
+
       return await this.appointmentRepository.save(newAppointment);
     } catch (error) {
       return new ResultException(error, HttpStatus.BAD_REQUEST);
     }
   }
+
+
+  public async addPatientAppointment(userId:string, newAppointment: AppointmentDto) {
+    try {
+      const patient = await this.patientService.getPatientUserId(userId);
+      newAppointment.patientId = patient.id;
+      
+      return await this.appointmentRepository.save(newAppointment);
+    } catch (error) {
+      return new ResultException(error, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+
 
   public async updateAppointment(id: string, newAppointment: AppointmentDto) {
     try {
@@ -85,8 +107,17 @@ export class AppointmentService {
     try {
       const dbAppointment: AppointmentDto = await this.getAppointment(id);
       if (dbAppointment) {
-        dbAppointment.isCanceled = true;
-        return await this.appointmentRepository.update(id, dbAppointment);
+        const newAppointment = new AppointmentDto();
+        newAppointment.appointmentDay = dbAppointment.appointmentDay;
+        newAppointment.appointmentTime = dbAppointment.appointmentTime;
+        newAppointment.date = dbAppointment.date;
+        newAppointment.description = dbAppointment.description;
+        newAppointment.doctorId = dbAppointment.doctorId;
+        newAppointment.patientId = dbAppointment.patientId;
+        newAppointment.type = dbAppointment.type;
+        newAppointment.isCanceled = true;
+
+        return await this.appointmentRepository.update(id, newAppointment);
       } else {
         return new ResultException('User not found', HttpStatus.NOT_FOUND);
       }

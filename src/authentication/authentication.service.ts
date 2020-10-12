@@ -62,6 +62,7 @@ export class AuthenticationService {
             const userDb = await this.identityUserService.createUser(user);
 
             patient.userId = userDb.id;
+            
             return this.patientService.updatePatient(patientDb.id, patientDb);
           }
         case 'doctor':

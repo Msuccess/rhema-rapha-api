@@ -21,7 +21,7 @@ export class AppointmentService {
 
   public async getAppointmentByUser(user: any): Promise<any> {
     try {
-      const patient = await this.patientService.getPatientUserId(user.id);
+     const patient = await this.patientService.getPatientByEmail(user.email);
 
       return await this.appointmentRepository.find({
         where: { 

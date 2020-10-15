@@ -49,6 +49,7 @@ export class AppointmentController {
     @Res() res: Response,
   ) {
     const response = await this.appointmentService.getAppointmentByUser(user);
+    
     return res
       .status(HttpStatus.OK)
       .json({ message: 'User Appointments data', data: response });
@@ -71,8 +72,9 @@ export class AppointmentController {
   public async create(
     @Body() appointment: AppointmentDto,
     @Res() res: Response,
+    @User() user: any,
   ) {
-    const response = await this.appointmentService.addAppointment(appointment);
+    const response = await this.appointmentService.addAppointment(appointment,user);
     return res
       .status(HttpStatus.CREATED)
       .json({ message: 'Appointment Created', data: response });

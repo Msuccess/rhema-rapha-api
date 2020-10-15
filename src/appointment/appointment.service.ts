@@ -21,7 +21,7 @@ export class AppointmentService {
 
   public async getAppointmentByUser(user: any): Promise<any> {
     try {
-      const patient = await this.patientService.getPatientUserId(user.id);
+     const patient = await this.patientService.getPatientByEmail(user.email);
 
       return await this.appointmentRepository.find({
         where: { 
@@ -65,9 +65,9 @@ export class AppointmentService {
   }
 
 
-  public async addAppointment(newAppointment: AppointmentDto) {
+  public async addAppointment(newAppointment: AppointmentDto,user : any) {
     try {
-      const patient = await this.patientService.getPatientUserId(newAppointment.patientId);
+      const patient = await this.patientService.getPatientByEmail(user.email);
       newAppointment.patientId = patient.id;
 
       return await this.appointmentRepository.save(newAppointment);

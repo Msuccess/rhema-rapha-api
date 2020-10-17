@@ -61,10 +61,12 @@ export class AuthenticationService {
             user.role = UserRole.PATIENT;
             const userDb = await this.identityUserService.createUser(user);
 
-            patient.userId = userDb.id;
+            patientDb.userId = userDb.id;
             
-            return this.patientService.updatePatient(patientDb.id, patientDb);
+          this.patientService.updatePatient(patientDb.id, patientDb);
+          return await this.getJwtToken(userDb);
           }
+          
         case 'doctor':
           const doctor = new DoctorDto();
           doctor.daysAvailable = data.daysAvailable;
@@ -81,7 +83,12 @@ export class AuthenticationService {
 
           if (typeof doctorDb === 'object' && doctorDb !== null) {
             user.role = UserRole.DOCTOR;
-            return this.identityUserService.createUser(user);
+            const userDb = await this.identityUserService.createUser(user);
+
+            doctorDb.userId = userDb.id;
+            
+          this.doctorService.updateDoctor(doctorDb.id, doctorDb);
+          return await this.getJwtToken(userDb);
           }
 
         case 'admin':
@@ -141,13 +148,7 @@ export class AuthenticationService {
       return this.identityUserService.createUser(newUser);
     } else {
       const dbUser = await this.validateUser(req.user.email);
-
-      const token = await this.createToken(
-        dbUser.id,
-        req.user.email,
-        dbUser.role,
-      );
-      return { token, dbUser };
+          this.getJwtToken(dbUser);
     }
   }
 
@@ -169,5 +170,15 @@ export class AuthenticationService {
 
   private verifyToken(token: string): any {
     this.jwtService.verify(token);
+  }
+
+  private async getJwtToken(dbUser:any){
+    const token = await this.createToken(
+      dbUser.id,
+      dbUser.email,
+      dbUser.role,
+    );
+    delete dbUser.password;
+    return { token, dbUser };
   }
 }

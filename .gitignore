@@ -4,7 +4,6 @@
 # compiled output
 /node_modules
 /dist
-ormconfig.js
 
 # Logs
 logs
@@ -65,3 +64,5 @@ $RECYCLE.BIN/
 Thumbs.db
 UserInterfaceState.xcuserstate
 
+ormconfig.jsons
+ormconfig.js

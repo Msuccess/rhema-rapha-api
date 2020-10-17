@@ -64,7 +64,7 @@ export class PatientService {
 
   public async updatePatient(id: string, newPatient: PatientDto) {
     try {
-      const dbPatient = this.getPatient(id);
+      const dbPatient = await this.getPatient(id);
 
       if (dbPatient) {
         return await this.patientRepository.update(id, newPatient);

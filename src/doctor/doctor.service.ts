@@ -57,11 +57,12 @@ export class DoctorService {
     }
   }
 
-  public async addDoctor(newDoctor: DoctorDto) {
+  public async addDoctor( newDoctor: DoctorDto) {
     try {
       return await this.doctorRepository.save(newDoctor);
+      
     } catch (error) {
-      return new ResultException(error, HttpStatus.BAD_REQUEST);
+       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -71,7 +72,7 @@ export class DoctorService {
       if (dbDoctor) {
         return await this.doctorRepository.update(id, newDoctor);
       } else {
-        return new ResultException('User not found', HttpStatus.NOT_FOUND);
+         new ResultException('User not found', HttpStatus.NOT_FOUND);
       }
     } catch (error) {
       return new ResultException(error, HttpStatus.BAD_REQUEST);

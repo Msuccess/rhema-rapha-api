@@ -1,19 +1,19 @@
 import { IdentityUserDto } from './dto/identity-user.dto';
-import { IdentityUserRepository } from './identity-user.repository';
 import { ResultException } from '../../configuration/exceptions/result';
 import { Injectable, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IdentityUserRepository } from './identity-user.repository';
 
 @Injectable()
 export class IdentityUserService {
   constructor(
     @InjectRepository(IdentityUserRepository)
-    private IdentityUserRepository: IdentityUserRepository,
+    private identityUserRepository: IdentityUserRepository,
   ) {}
 
   public async getUserByEmail(email: string): Promise<IdentityUserDto> {
     try {
-      return await this.IdentityUserRepository.findOne({ email });
+      return await this.identityUserRepository.findOne({ email });
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
@@ -21,7 +21,7 @@ export class IdentityUserService {
 
   public async getUserById(id: string): Promise<IdentityUserDto> {
     try {
-      return await this.IdentityUserRepository.findOne(id);
+      return await this.identityUserRepository.findOne(id);
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
@@ -29,7 +29,7 @@ export class IdentityUserService {
 
   public async getAllUser(): Promise<any> {
     try {
-      return await this.IdentityUserRepository.find();
+      return await this.identityUserRepository.find();
     } catch (error) {
       return new ResultException(error, HttpStatus.BAD_REQUEST);
     }
@@ -37,7 +37,7 @@ export class IdentityUserService {
 
   public async createUser(user: IdentityUserDto) {
     try {
-      return await this.IdentityUserRepository.save(user);
+      return await this.identityUserRepository.save(user);
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
@@ -45,7 +45,7 @@ export class IdentityUserService {
 
   public async deleteUser(userId: string) {
     try {
-      return await this.IdentityUserRepository.delete(userId);
+      return await this.identityUserRepository.delete(userId);
     } catch (error) {
       return new ResultException(error, HttpStatus.BAD_REQUEST);
     }

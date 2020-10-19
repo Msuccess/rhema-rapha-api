@@ -32,15 +32,15 @@ const path = join(__dirname, '../src/template/');
     TypeOrmModule.forRoot(),
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.gmail.com',
-        port: '587',
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
         tls: {
           ciphers: 'SSLv3',
         },
         secure: false, // true for 465, false for other ports
         auth: {
-          user: 'rhemaraphaapp@gmail.com', // generated ethereal user
-          pass: 'rhemaApp20', // generated ethereal password
+          user: process.env.FROM_EMAIL, // generated ethereal user
+          pass: process.env.PASSWORD, // generated ethereal password
         },
       },
       defaults: {

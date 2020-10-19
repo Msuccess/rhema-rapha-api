@@ -22,11 +22,12 @@ export const config = {
 };
 
 export const emailSettings = {
-  primaryDomain: process.env.PRIMARY_DOMAIN,
-  primaryPort: process.env.PRIMARY_PORT,
+  primaryDomain: 'smtp.gmail.com',
+  primaryPort: '587',
   secondaryPort: process.env.SECONDARY_PORT,
-  usernamePassword: process.env.PASSWORD,
-  fromEmail: process.env.FROM_EMAIL,
+  username: 'rhemaraphaapp@gmail.com',
+  password: 'rhemaApp20',
+  fromEmail: 'rhemaraphaapp@gmail.com',
 };
 
 export const SECRET = 'secret-key2';

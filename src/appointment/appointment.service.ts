@@ -21,12 +21,12 @@ export class AppointmentService {
 
   public async getAppointmentByUser(user: any): Promise<any> {
     try {
-     const patient = await this.patientService.getPatientByEmail(user.email);
+      const patient = await this.patientService.getPatientByEmail(user.email);
 
       return await this.appointmentRepository.find({
-        where: { 
+        where: {
           patientId: patient.id,
-          isCanceled:false
+          isCanceled: false,
         },
       });
     } catch (error) {
@@ -64,8 +64,7 @@ export class AppointmentService {
     }
   }
 
-
-  public async addAppointment(newAppointment: AppointmentDto,user : any) {
+  public async addAppointment(newAppointment: AppointmentDto, user: any) {
     try {
       const patient = await this.patientService.getPatientByEmail(user.email);
       newAppointment.patientId = patient.id;
@@ -76,19 +75,19 @@ export class AppointmentService {
     }
   }
 
-
-  public async addPatientAppointment(userId:string, newAppointment: AppointmentDto) {
+  public async addPatientAppointment(
+    userId: string,
+    newAppointment: AppointmentDto,
+  ) {
     try {
       const patient = await this.patientService.getPatientUserId(userId);
       newAppointment.patientId = patient.id;
-      
+
       return await this.appointmentRepository.save(newAppointment);
     } catch (error) {
       return new ResultException(error, HttpStatus.BAD_REQUEST);
     }
   }
-
-
 
   public async updateAppointment(id: string, newAppointment: AppointmentDto) {
     try {
@@ -141,7 +140,7 @@ export class AppointmentService {
       const yesterday = "NOW() - INTERVAL '1 DAY'";
       const appointments = await this.appointmentRepository.find({
         where: {
-           // date: Raw(alias => `${alias} = ${yesterday}`),
+          // date: Raw(alias => `${alias} = ${yesterday}`),
           isCanceled: false,
           date: Raw(alias => `${alias} < NOW()`),
         },

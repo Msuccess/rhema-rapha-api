@@ -134,16 +134,16 @@ export class AppointmentService {
     }
   }
 
-  // @Cron(CronExpression.EVERY_10_SECONDS)
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  @Cron(CronExpression.EVERY_10_SECONDS)
+  // @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   public async getAppointNotification() {
     try {
-      const yesterday = "NOW() - INTERVAL '1 DAY'";
+      // const yesterday = "NOW() - INTERVAL '1 DAY'";
       const appointments = await this.appointmentRepository.find({
         where: {
-          date: Raw(alias => `${alias} = ${yesterday}`),
+          // date: Raw(alias => `${alias} = ${yesterday}`),
           isCanceled: false,
-          // date: Raw(alias => `${alias} < NOW()`),
+          date: Raw(alias => `${alias} < NOW()`),
         },
       });
 

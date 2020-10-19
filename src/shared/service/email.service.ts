@@ -33,7 +33,6 @@ export class EmailService {
       });
 
       const result = await this.mailerService.sendMail({
-        // to: 'qzy27466@cuoly.com',
         to: patient.patientEmail,
         from: emailSettings.fromEmail,
         subject: 'Appointment Notification',

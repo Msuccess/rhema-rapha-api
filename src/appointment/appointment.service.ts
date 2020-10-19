@@ -134,8 +134,8 @@ export class AppointmentService {
     }
   }
 
-  // @Cron(CronExpression.EVERY_10_SECONDS)
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  @Cron(CronExpression.EVERY_10_SECONDS)
+  // @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   public async getAppointNotification() {
     try {
       const yesterday = "NOW() - INTERVAL '1 DAY'";

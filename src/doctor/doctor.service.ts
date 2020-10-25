@@ -41,7 +41,7 @@ export class DoctorService {
   public async getDoctor(id: string): Promise<GetDoctorDto> {
     try {
       return await this.doctorRepository.findOne({
-        where: 'id is' + id,
+        where: { id: id },
         relations: ['department'],
       });
     } catch (error) {
@@ -57,22 +57,32 @@ export class DoctorService {
     }
   }
 
-  public async addDoctor( newDoctor: DoctorDto) {
+  public async addDoctor(newDoctor: DoctorDto) {
     try {
       return await this.doctorRepository.save(newDoctor);
-      
     } catch (error) {
-       new ResultException(error, HttpStatus.BAD_REQUEST);
+      new ResultException(error, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  public async updateDoctorPassword(email: string, password: string) {
+    const dbDoctor = await this.getDoctorByEmail(email);
+
+    if (dbDoctor) {
+      dbDoctor.password = password;
+      return await this.doctorRepository.update(dbDoctor.id, dbDoctor);
+    } else {
+      new ResultException('User not found', HttpStatus.NOT_FOUND);
     }
   }
 
   public async updateDoctor(id: string, newDoctor: DoctorDto) {
     try {
-      const dbDoctor = this.getDoctor(id);
+      const dbDoctor = await this.getDoctor(id);
       if (dbDoctor) {
         return await this.doctorRepository.update(id, newDoctor);
       } else {
-         new ResultException('User not found', HttpStatus.NOT_FOUND);
+        new ResultException('User not found', HttpStatus.NOT_FOUND);
       }
     } catch (error) {
       return new ResultException(error, HttpStatus.BAD_REQUEST);

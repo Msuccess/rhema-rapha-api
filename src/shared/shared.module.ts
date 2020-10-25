@@ -1,3 +1,4 @@
+import { NotificationController } from './service/notification.controller';
 import { IdentityUserService } from './../authentication/identity-user/identity-user.service';
 import { Module } from '@nestjs/common';
 import { IdentityUserRepository } from '../authentication/identity-user/identity-user.repository';
@@ -7,7 +8,7 @@ import { EmailService } from './service/email.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([IdentityUserRepository])],
-  controllers: [],
+  controllers: [NotificationController],
   providers: [IdentityUserService, NotificationService, EmailService],
   exports: [IdentityUserService, EmailService],
 })

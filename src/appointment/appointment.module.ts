@@ -1,3 +1,4 @@
+import { DoctorModule } from './../doctor/doctor.module';
 import { PatientModule } from './../patient/patient.module';
 import { SharedModule } from './../shared/shared.module';
 import { AppointmentService } from './appointment.service';
@@ -17,6 +18,7 @@ import { AuthenticationModule } from '../authentication/authentication.module';
     AuthenticationModule,
     SharedModule,
     PatientModule,
+    DoctorModule,
   ],
   controllers: [AppointmentController],
   providers: [AppointmentService],

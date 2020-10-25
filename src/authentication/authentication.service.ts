@@ -11,6 +11,7 @@ import { DoctorService } from '../doctor/doctor.service';
 import { PatientService } from '../patient/patient.service';
 import { UserRole } from '../shared/user-base.entity';
 import { RegisterDto } from './identity-user/dto/register.dto';
+import { ChangePasswordDto } from './identity-user/dto/change-password.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -62,11 +63,11 @@ export class AuthenticationService {
             const userDb = await this.identityUserService.createUser(user);
 
             patientDb.userId = userDb.id;
-            
-          this.patientService.updatePatient(patientDb.id, patientDb);
-          return await this.getJwtToken(userDb);
+
+            this.patientService.updatePatient(patientDb.id, patientDb);
+            return await this.getJwtToken(userDb);
           }
-          
+
         case 'doctor':
           const doctor = new DoctorDto();
           doctor.daysAvailable = data.daysAvailable;
@@ -86,9 +87,9 @@ export class AuthenticationService {
             const userDb = await this.identityUserService.createUser(user);
 
             doctorDb.userId = userDb.id;
-            
-          this.doctorService.updateDoctor(doctorDb.id, doctorDb);
-          return await this.getJwtToken(userDb);
+
+            this.doctorService.updateDoctor(doctorDb.id, doctorDb);
+            return await this.getJwtToken(userDb);
           }
 
         case 'admin':
@@ -148,13 +149,63 @@ export class AuthenticationService {
       return this.identityUserService.createUser(newUser);
     } else {
       const dbUser = await this.validateUser(req.user.email);
-          this.getJwtToken(dbUser);
+      this.getJwtToken(dbUser);
     }
   }
 
   public async validateUser(email: string): Promise<any> {
     try {
       return await this.identityUserService.getUserByEmail(email);
+    } catch (error) {
+      return new ResultException(error, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  public async changeUserPassword(
+    user: any,
+    passwordValues: ChangePasswordDto,
+  ) {
+    try {
+      const dbUser = await this.identityUserService.getUserByEmail(user.email);
+
+      if (!dbUser || Object.keys(dbUser).length === 0) {
+        return new ResultException('Wrong credentials', HttpStatus.BAD_REQUEST);
+      }
+
+      const verifyPassword = await this.passwordEncryptedService.decrypt(
+        passwordValues.oldPassword,
+        dbUser.password,
+      );
+
+      if (!verifyPassword) {
+        return;
+      }
+      const password = (
+        await this.passwordEncryptedService.encrypt(passwordValues.newPassword)
+      ).toString();
+
+      const status = await this.identityUserService.updatePassword(
+        dbUser.id,
+        password,
+      );
+      if (status) {
+        switch (dbUser.role.toLowerCase()) {
+          case 'patient':
+            return this.patientService.updatePatientPassword(
+              dbUser.email,
+              password,
+            );
+
+          case 'doctor':
+            return this.doctorService.updateDoctorPassword(
+              dbUser.email,
+              password,
+            );
+
+          default:
+            return;
+        }
+      }
     } catch (error) {
       return new ResultException(error, HttpStatus.BAD_REQUEST);
     }
@@ -172,12 +223,8 @@ export class AuthenticationService {
     this.jwtService.verify(token);
   }
 
-  private async getJwtToken(dbUser:any){
-    const token = await this.createToken(
-      dbUser.id,
-      dbUser.email,
-      dbUser.role,
-    );
+  private async getJwtToken(dbUser: any) {
+    const token = await this.createToken(dbUser.id, dbUser.email, dbUser.role);
     delete dbUser.password;
     return { token, dbUser };
   }

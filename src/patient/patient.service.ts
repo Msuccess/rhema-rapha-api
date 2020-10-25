@@ -25,17 +25,16 @@ export class PatientService {
     }
   }
 
-  public async getPatientUserId(id: string){
+  public async getPatientUserId(id: string) {
     try {
       return await this.patientRepository.findOne({
-        where: { 
+        where: {
           userId: id,
         },
       });
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
-    
   }
 
   public async getPatient(id: string) {
@@ -59,6 +58,16 @@ export class PatientService {
       return await this.patientRepository.save(newPatient);
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async updatePatientPassword(email: string, password: string) {
+    const dbPatient = await this.getPatientByEmail(email);
+    if (dbPatient) {
+      dbPatient.password = password;
+      return await this.patientRepository.update(dbPatient.id, dbPatient);
+    } else {
+      return new ResultException('User not found', HttpStatus.NOT_FOUND);
     }
   }
 

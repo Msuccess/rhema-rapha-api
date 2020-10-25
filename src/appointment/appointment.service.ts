@@ -1,3 +1,4 @@
+import { DoctorService } from './../doctor/doctor.service';
 import { PatientService } from './../patient/patient.service';
 import { AppointmentMailDto } from './dto/appointment_mail.dto';
 import { EmailService } from './../shared/service/email.service';
@@ -17,6 +18,7 @@ export class AppointmentService {
     private readonly appointmentRepository: AppointmentRepository,
     private readonly emailService: EmailService,
     private readonly patientService: PatientService,
+    private readonly doctorService: DoctorService,
   ) {}
 
   public async getAppointmentByUser(user: any): Promise<any> {
@@ -27,6 +29,20 @@ export class AppointmentService {
         where: {
           patientId: patient.id,
           isCanceled: false,
+        },
+      });
+    } catch (error) {
+      new ResultException(error, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  public async getAppointmentByDoctorId(user: any): Promise<any> {
+    try {
+      const doctor = await this.doctorService.getDoctorByEmail(user.email);
+
+      return await this.appointmentRepository.find({
+        where: {
+          doctorId: doctor.id,
         },
       });
     } catch (error) {
@@ -64,11 +80,8 @@ export class AppointmentService {
     }
   }
 
-  public async addAppointment(newAppointment: AppointmentDto, user: any) {
+  public async addAppointment(newAppointment: AppointmentDto) {
     try {
-      const patient = await this.patientService.getPatientByEmail(user.email);
-      newAppointment.patientId = patient.id;
-
       return await this.appointmentRepository.save(newAppointment);
     } catch (error) {
       return new ResultException(error, HttpStatus.BAD_REQUEST);
@@ -91,7 +104,7 @@ export class AppointmentService {
 
   public async updateAppointment(id: string, newAppointment: AppointmentDto) {
     try {
-      const dbAppointment = this.getAppointment(id);
+      const dbAppointment = await this.getAppointment(id);
       if (dbAppointment) {
         return await this.appointmentRepository.update(id, newAppointment);
       } else {

@@ -27,6 +27,33 @@ export class IdentityUserService {
     }
   }
 
+  public async updatePassword(id: string, password: string) {
+    try {
+      const dbUser = await this.getUserById(id);
+      if (dbUser) {
+        dbUser.password = password;
+        return await this.identityUserRepository.update(id, dbUser);
+      } else {
+        return new ResultException('User not found', HttpStatus.NOT_FOUND);
+      }
+    } catch (error) {
+      new ResultException(error, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  public async updateUser(id: string, newUser: any) {
+    try {
+      const dbUser = await this.getUserById(id);
+      if (dbUser) {
+        return await this.identityUserRepository.update(id, newUser);
+      } else {
+        return new ResultException('User not found', HttpStatus.NOT_FOUND);
+      }
+    } catch (error) {
+      new ResultException(error, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   public async getAllUser(): Promise<any> {
     try {
       return await this.identityUserRepository.find();

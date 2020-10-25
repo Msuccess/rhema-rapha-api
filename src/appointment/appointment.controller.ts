@@ -44,18 +44,31 @@ export class AppointmentController {
 
   @Get()
   @Roles('admin', 'doctor', 'patient')
-  public async getAppointmentsByUserId(
+  public async getAppointmentsByPatientId(
     @User() user: any,
     @Res() res: Response,
   ) {
     const response = await this.appointmentService.getAppointmentByUser(user);
-    
+
     return res
       .status(HttpStatus.OK)
-      .json({ message: 'User Appointments data', data: response });
+      .json({ message: 'Patient Appointments data', data: response });
   }
 
-  public async getAppointmentByDoctorId() {}
+  @Get('doctor')
+  @Roles('admin', 'doctor')
+  public async getAppointmentByDoctorId(
+    @User() user: any,
+    @Res() res: Response,
+  ) {
+    const response = await this.appointmentService.getAppointmentByDoctorId(
+      user,
+    );
+
+    return res
+      .status(HttpStatus.OK)
+      .json({ message: 'Doctor Appointments data', data: response });
+  }
 
   @Get('/:id')
   @Roles('admin', 'doctor', 'patient')
@@ -72,9 +85,8 @@ export class AppointmentController {
   public async create(
     @Body() appointment: AppointmentDto,
     @Res() res: Response,
-    @User() user: any,
   ) {
-    const response = await this.appointmentService.addAppointment(appointment,user);
+    const response = await this.appointmentService.addAppointment(appointment);
     return res
       .status(HttpStatus.CREATED)
       .json({ message: 'Appointment Created', data: response });
@@ -88,14 +100,16 @@ export class AppointmentController {
     @Res() res: Response,
     @User() user: IdentityUserDto,
   ) {
-    const response = await this.appointmentService.addPatientAppointment(user.id,appointment);
+    const response = await this.appointmentService.addPatientAppointment(
+      user.id,
+      appointment,
+    );
 
     return res
       .status(HttpStatus.CREATED)
       .json({ message: 'Appointment Created', data: response });
   }
 
- 
   @Put('/:id')
   @Roles('admin', 'doctor', 'patient')
   public async update(

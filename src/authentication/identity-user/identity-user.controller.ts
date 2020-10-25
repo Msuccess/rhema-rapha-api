@@ -1,3 +1,5 @@
+import { User } from './../auth-guard/current-user.decorator';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { Roles } from './../auth-guard/role.decorator';
 import {
   Controller,
@@ -78,5 +80,19 @@ export class IdentityUserController {
     return res
       .status(HttpStatus.CREATED)
       .json({ message: 'Doctor deleted', data: response });
+  }
+
+  @Post('changepassword')
+  @UsePipes(new ValidatorPipe())
+  public async changePassword(
+    @Body() password: ChangePasswordDto,
+    @Res() res: Response,
+    @User() user: any,
+  ) {
+    const response = await this.authService.changeUserPassword(user, password);
+
+    return res
+      .status(HttpStatus.OK)
+      .json({ message: 'Password Changed Successfully', data: response });
   }
 }

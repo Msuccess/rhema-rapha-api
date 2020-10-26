@@ -21,6 +21,18 @@ export class AppointmentService {
     private readonly doctorService: DoctorService,
   ) {}
 
+  private async checkAppointmentBooking(
+    appointmentTime: string,
+    appointmentDate: Date,
+  ) {
+    return await this.appointmentRepository.find({
+      where: {
+        date: appointmentDate,
+        appointmentTime: appointmentTime,
+      },
+    });
+  }
+
   public async getAppointmentByUser(user: any): Promise<any> {
     try {
       const patient = await this.patientService.getPatientByEmail(user.email);
@@ -82,6 +94,18 @@ export class AppointmentService {
 
   public async addAppointment(newAppointment: AppointmentDto) {
     try {
+      const booked = await this.checkAppointmentBooking(
+        newAppointment.appointmentTime,
+        newAppointment.date,
+      );
+
+      if (booked || Object.keys(booked).length !== 0) {
+        return new ResultException(
+          'Date and Time Already Booked',
+          HttpStatus.NOT_ACCEPTABLE,
+        );
+      }
+
       return await this.appointmentRepository.save(newAppointment);
     } catch (error) {
       return new ResultException(error, HttpStatus.BAD_REQUEST);
@@ -93,6 +117,18 @@ export class AppointmentService {
     newAppointment: AppointmentDto,
   ) {
     try {
+      const booked = await this.checkAppointmentBooking(
+        newAppointment.appointmentTime,
+        newAppointment.date,
+      );
+
+      if (booked || Object.keys(booked).length !== 0) {
+        return new ResultException(
+          'Date and Time Already Booked',
+          HttpStatus.NOT_ACCEPTABLE,
+        );
+      }
+
       const patient = await this.patientService.getPatientUserId(userId);
       newAppointment.patientId = patient.id;
 

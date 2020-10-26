@@ -6,8 +6,6 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { SECRET, EXPIRESIN } from '../configuration/config';
 import { JwtStrategy } from './auth-configuration/jwt.strategy';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { IdentityUserRepository } from './identity-user/identity-user.repository';
 import { GoogleStrategy } from './auth-configuration/google.strategy';
 import { PatientModule } from '../patient/patient.module';
 import { DoctorModule } from '../doctor/doctor.module';

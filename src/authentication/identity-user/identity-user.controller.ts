@@ -13,6 +13,7 @@ import {
   Req,
   Delete,
   Param,
+  Put,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { ValidatorPipe } from '../../shared/pipes/validator.pipe';
@@ -21,6 +22,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { IdentityUserService } from './identity-user.service';
 import { RegisterDto } from './dto/register.dto';
 import { ApiTags } from '@nestjs/swagger';
+
 @ApiTags('Authentication')
 @Controller('auth')
 export class IdentityUserController {
@@ -37,6 +39,33 @@ export class IdentityUserController {
     return res
       .status(HttpStatus.CREATED)
       .json({ message: 'Registration Successful', data: response });
+  }
+
+  @Get('/:id')
+  @Roles('admin')
+  public async getById(
+    @Param('id') id: string,
+    @Res() res: Response,
+  ): Promise<any> {
+    const response = await this.identityUserService.getUserById(id);
+    return res
+      .status(HttpStatus.OK)
+      .json({ message: 'User Data', data: response });
+  }
+
+  @Put('/:id')
+  @Roles('admin')
+  @UsePipes(new ValidatorPipe())
+  public async update(
+    @Param('id') id: string,
+    @Body() user: any,
+    @Res() res: Response,
+  ) {
+    const response = await this.identityUserService.updateUser(id, user);
+
+    return res
+      .status(HttpStatus.CREATED)
+      .json({ message: 'User updated', data: response });
   }
 
   @Post('login')
@@ -82,14 +111,14 @@ export class IdentityUserController {
       .json({ message: 'Doctor deleted', data: response });
   }
 
-  @Post('changepassword')
+  @Put('changepassword/:id')
   @UsePipes(new ValidatorPipe())
   public async changePassword(
     @Body() password: ChangePasswordDto,
     @Res() res: Response,
-    @User() user: any,
+    @Param('id') id: string,
   ) {
-    const response = await this.authService.changeUserPassword(user, password);
+    const response = await this.authService.changeUserPassword(id, password);
 
     return res
       .status(HttpStatus.OK)

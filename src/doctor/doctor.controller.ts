@@ -1,3 +1,4 @@
+import { User } from './../authentication/auth-guard/current-user.decorator';
 import { PasswordEncrypterService } from './../authentication/auth-configuration/password-encrypter.service';
 import {
   Controller,
@@ -40,6 +41,18 @@ export class DoctorController {
       .json({ message: 'All Doctors data', data: response });
   }
 
+  @Get('self')
+  @Roles('doctor')
+  public async getDoctorByEmail(
+    @Res() res: Response,
+    @User() user: any,
+  ): Promise<any> {
+    const response = await this.doctorService.getDoctorByEmail(user.email);
+    return res
+      .status(HttpStatus.OK)
+      .json({ message: 'All Doctors data', data: response });
+  }
+
   @Get('/:id')
   @Roles('admin', 'doctor', 'patient')
   public async getById(
@@ -63,25 +76,6 @@ export class DoctorController {
       .status(HttpStatus.OK)
       .json({ message: 'Doctor Data', data: response });
   }
-
-  // @Post()
-  // @Roles('admin', 'doctor')
-  // @UsePipes(ValidationPipe)
-  // public async create(
-  //   @Body() doctor: DoctorDto,
-  //   @Res() res: Response,
-  // ): Promise<any> {
-  //   if (doctor.password) {
-  //     doctor.password = (
-  //       await this.passwordEncrypterService.encrypt(doctor.password)
-  //     ).toString();
-  //   }
-  //   const response = await this.doctorService.addDoctor(doctor);
-
-  //   return res
-  //     .status(HttpStatus.CREATED)
-  //     .json({ message: 'Doctor Created', data: response });
-  // }
 
   @Put('/:id')
   @Roles('admin', 'doctor')

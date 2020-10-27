@@ -1,5 +1,5 @@
 import { IdentityUserDto } from './../authentication/identity-user/dto/identity-user.dto';
-import { Response, query } from 'express';
+import { Response } from 'express';
 import {
   Controller,
   Get,

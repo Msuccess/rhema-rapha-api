@@ -22,13 +22,15 @@ export class AppointmentService {
   ) {}
 
   private async checkAppointmentBooking(
-    appointmentTime: string,
+    time: string,
     appointmentDate: Date,
+    doctorId: string,
   ) {
     return await this.appointmentRepository.find({
       where: {
         date: appointmentDate,
-        appointmentTime: appointmentTime,
+        appointmentTime: time,
+        doctorId: doctorId,
       },
     });
   }
@@ -41,6 +43,7 @@ export class AppointmentService {
         where: {
           patientId: patient.id,
           isCanceled: false,
+          createdAt: Raw(alias => `${alias} > NOW()`),
         },
       });
     } catch (error) {
@@ -55,6 +58,7 @@ export class AppointmentService {
       return await this.appointmentRepository.find({
         where: {
           doctorId: doctor.id,
+          createdAt: Raw(alias => `${alias} > NOW()`),
         },
       });
     } catch (error) {
@@ -77,7 +81,10 @@ export class AppointmentService {
   public async getDoctorAppointment(id: string): Promise<any> {
     try {
       return await this.appointmentRepository.find({
-        where: { doctorId: id },
+        where: {
+          doctorId: id,
+          createdAt: Raw(alias => `${alias} > NOW()`),
+        },
       });
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
@@ -97,9 +104,10 @@ export class AppointmentService {
       const booked = await this.checkAppointmentBooking(
         newAppointment.appointmentTime,
         newAppointment.date,
+        newAppointment.doctorId,
       );
 
-      if (booked || Object.keys(booked).length !== 0) {
+      if (!booked || Object.keys(booked).length !== 0) {
         return new ResultException(
           'Date and Time Already Booked',
           HttpStatus.NOT_ACCEPTABLE,
@@ -120,6 +128,7 @@ export class AppointmentService {
       const booked = await this.checkAppointmentBooking(
         newAppointment.appointmentTime,
         newAppointment.date,
+        newAppointment.doctorId,
       );
 
       if (booked || Object.keys(booked).length !== 0) {

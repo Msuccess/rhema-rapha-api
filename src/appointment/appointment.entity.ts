@@ -23,6 +23,9 @@ export class AppointmentEntity extends SharedBaseEntity {
   @Column({ type: 'bool', default: false })
   isCanceled: boolean;
 
+  @Column({ type: 'varchar', default: 'Active', nullable: true })
+  status: string;
+
   @ManyToOne(
     () => DoctorEntity,
     doctor => doctor.appointment,

@@ -129,6 +129,7 @@ export class AuthenticationService {
         delete dbUser.password;
         return { token, dbUser };
       }
+      return new ResultException('Wrong credentials', HttpStatus.BAD_REQUEST);
     } catch (error) {
       return new ResultException(error, HttpStatus.BAD_REQUEST);
     }

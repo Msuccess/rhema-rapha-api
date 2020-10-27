@@ -17,6 +17,7 @@ import { AllExceptionsFilter } from './configuration/exceptions/exception.filter
 import { MailerModule } from '@nestjs-modules/mailer';
 import { emailSettings } from './config';
 import { join } from 'path';
+import { AnalyticsModule } from './analytics/analytics.module';
 const path = join(__dirname, '../src/template/');
 
 @Module({
@@ -54,6 +55,7 @@ const path = join(__dirname, '../src/template/');
         },
       },
     }),
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [

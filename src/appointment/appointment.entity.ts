@@ -11,6 +11,9 @@ export class AppointmentEntity extends SharedBaseEntity {
   @Column({ type: Date, nullable: false })
   date: Date;
 
+  @Column({ type: 'varchar', nullable: true })
+  dateStr: string;
+
   @Column({ type: 'varchar', nullable: false })
   appointmentTime: string;
 

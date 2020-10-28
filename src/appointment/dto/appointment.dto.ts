@@ -1,6 +1,5 @@
-import { Type } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 
 export class AppointmentDto {
   public id: string;
@@ -12,6 +11,9 @@ export class AppointmentDto {
   @IsDateString({ message: 'Date is not valid' })
   @IsNotEmpty({ message: 'Date is not provided' })
   public date: Date;
+
+  @ApiProperty()
+  dateStr: string;
 
   @ApiProperty()
   @IsNotEmpty({ message: 'Time is not provided' })
@@ -49,6 +51,9 @@ export class AppointmentPatientDto {
   @IsDateString({ message: 'Date is not valid' })
   @IsNotEmpty({ message: 'Date is not provided' })
   public date: Date;
+
+  @ApiProperty()
+  dateStr: string;
 
   @ApiProperty()
   @IsNotEmpty({ message: 'Time is not provided' })

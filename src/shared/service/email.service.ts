@@ -44,4 +44,25 @@ export class EmailService {
       console.log(error);
     }
   }
+
+  public async appointmentNotificationEmailTemplate(
+    patient: AppointmentMailDto,
+  ) {
+    try {
+      const data = await ejs.renderFile(path + 'appointment.ejs', {
+        appointment_detail: patient,
+      });
+
+      const result = await this.mailerService.sendMail({
+        to: patient.patientEmail,
+        from: emailSettings.fromEmail,
+        subject: 'Appointment Notification',
+        html: data,
+      });
+
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

@@ -7,6 +7,8 @@ export class PatientEntity extends UserBaseEntity {
   @Column({ type: Date, nullable: false })
   dateOfBirth: Date;
 
+ 
+
   @Column({ type: 'varchar', nullable: true })
   gender: string;
 

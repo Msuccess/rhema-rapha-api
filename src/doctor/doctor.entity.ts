@@ -14,6 +14,7 @@ export class DoctorEntity extends UserBaseEntity {
   @Column({ type: 'varchar', nullable: false })
   timesAvailable: string;
 
+
   @ManyToOne(
     () => DepartmentEntity,
     department => department.doctor,

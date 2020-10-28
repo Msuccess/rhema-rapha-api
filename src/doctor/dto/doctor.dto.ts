@@ -36,6 +36,7 @@ export class DoctorDto {
   @IsNotEmpty({ message: 'Password cannot be null' })
   public password: string;
 
+  isDeleted:boolean;
   userId: string;
 
   public role: UserRole;

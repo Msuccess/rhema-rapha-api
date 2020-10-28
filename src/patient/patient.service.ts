@@ -19,6 +19,9 @@ export class PatientService {
         take: query.pageSize,
         skip: query.pageSize * (query.page - 1),
         order: { createdAt: 'DESC' },
+        where:{
+          isDeleted:false
+        }
       });
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
@@ -87,19 +90,33 @@ export class PatientService {
 
   public async deletePatient(id: string) {
     try {
-      await this.patientRepository.query(`DELETE FROM public."AppointmentTbl" WHERE "patientId" = '${id}'`);
-      return await this.patientRepository.delete(id);
+      const dbPatient = await this.getPatient(id);
+
+      if (dbPatient) {
+        
+        const patient = new PatientDto();
+        patient.address = dbPatient.address;
+        patient.isDeleted=true;
+        patient.bloodPressure = dbPatient.bloodPressure;
+        patient.bloodType = dbPatient.bloodType;
+        patient.dateOfBirth = dbPatient.dateOfBirth;
+        patient.email = dbPatient.email;
+        patient.fullName = dbPatient.fullName;
+        patient.gender = dbPatient.gender;
+        patient.password = dbPatient.password;
+        patient.userId = dbPatient.userId;
+        patient.height = dbPatient.height;
+        patient.role = dbPatient.role;
+        return await this.patientRepository.update(id, patient);
+      } else {
+        return new ResultException('User not found', HttpStatus.NOT_FOUND);
+      }
+
+      // await this.patientRepository.query(`DELETE FROM public."AppointmentTbl" WHERE "patientId" = '${id}'`);
+      // return await this.patientRepository.delete(id);
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
   }
-// public async delete(id: string) {
-//     try {
-//       await this.patientRepository.query(`DELETE FROM public."AppointmentTbl" WHERE "patientId" = '${id}'`);
-//       return await this.patientRepository.delete(id);
-//     } catch (error) {
-//       new ResultException(error, HttpStatus.BAD_REQUEST);
-//     }
-//   }
 
 }

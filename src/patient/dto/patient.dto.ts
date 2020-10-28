@@ -42,6 +42,6 @@ export class PatientDto {
   gender: string;
 
   userId: string;
-
+  isDeleted:boolean;
   public role: UserRole;
 }

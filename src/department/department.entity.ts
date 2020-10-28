@@ -10,6 +10,7 @@ export class DepartmentEntity extends SharedBaseEntity {
   @Column({ type: 'varchar', nullable: true })
   description: string;
 
+
   @OneToMany(
     () => DoctorEntity,
     doctor => doctor.department,

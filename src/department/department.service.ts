@@ -18,6 +18,9 @@ export class DepartmentService {
         take: query.pageSize,
         skip: query.pageSize * (query.page - 1),
         order: { createdAt: 'DESC' },
+        where:{
+          isDeleted: false
+        }
       });
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
@@ -42,7 +45,7 @@ export class DepartmentService {
     newDepartment: DepartmentDto,
   ): Promise<any> {
     try {
-      const dbDepartment = this.getDepartment(id);
+      const dbDepartment = await this.getDepartment(id);
       if (dbDepartment) {
         return await this.departmentRepository.update(id, newDepartment);
       } else {
@@ -56,7 +59,18 @@ export class DepartmentService {
   public async deleteDepartment(id: string): Promise<any> {
     try {
      
-      return await this.departmentRepository.delete(id);
+      const dbDepartment = await this.getDepartment(id);
+      if (dbDepartment) {
+        const dpt = new DepartmentDto();
+        dpt.description = dbDepartment.description
+        dpt.name = dbDepartment.name
+        dpt.isDeleted = true;
+        return await this.departmentRepository.update(id,dpt);
+      } else {
+        return new ResultException('User not found', HttpStatus.NOT_FOUND);
+      }
+
+      // return await this.departmentRepository.delete(id);
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }

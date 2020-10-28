@@ -1,3 +1,4 @@
+import { bool, boolean } from 'joi';
 import {
   PrimaryGeneratedColumn,
   Column,
@@ -16,6 +17,9 @@ export enum UserRole {
 export class UserBaseEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column({ nullable: false, default:false })
+  isDeleted:boolean;
 
   @Column({
     type: 'varchar',

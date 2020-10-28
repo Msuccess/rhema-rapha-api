@@ -123,7 +123,6 @@ export class AppointmentService {
   public async getAppointments(query: QueryModel): Promise<any> {
     try {
       const today = moment().format('LL');
-      const time = moment().format('LT');
 
       const r = await this.appointmentRepository.find({
         take: query.pageSize,

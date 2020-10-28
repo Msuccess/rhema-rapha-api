@@ -87,9 +87,19 @@ export class PatientService {
 
   public async deletePatient(id: string) {
     try {
+      await this.patientRepository.query(`DELETE FROM public."AppointmentTbl" WHERE "patientId" = '${id}'`);
       return await this.patientRepository.delete(id);
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
   }
+// public async delete(id: string) {
+//     try {
+//       await this.patientRepository.query(`DELETE FROM public."AppointmentTbl" WHERE "patientId" = '${id}'`);
+//       return await this.patientRepository.delete(id);
+//     } catch (error) {
+//       new ResultException(error, HttpStatus.BAD_REQUEST);
+//     }
+//   }
+
 }

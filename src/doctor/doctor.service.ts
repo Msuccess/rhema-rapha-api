@@ -91,9 +91,11 @@ export class DoctorService {
 
   public async deleteDoctor(id: string) {
     try {
+      await this.doctorRepository.query(`DELETE FROM public."AppointmentTbl" WHERE "doctorId" = '${id}'`);
       return await this.doctorRepository.delete(id);
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
   }
+
 }

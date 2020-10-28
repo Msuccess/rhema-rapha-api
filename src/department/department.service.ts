@@ -52,11 +52,14 @@ export class DepartmentService {
       return new ResultException(error, HttpStatus.BAD_REQUEST);
     }
   }
+
   public async deleteDepartment(id: string): Promise<any> {
     try {
+     
       return await this.departmentRepository.delete(id);
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
   }
+
 }

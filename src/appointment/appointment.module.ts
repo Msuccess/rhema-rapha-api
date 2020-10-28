@@ -3,11 +3,12 @@ import { PatientModule } from './../patient/patient.module';
 import { SharedModule } from './../shared/shared.module';
 import { AppointmentService } from './appointment.service';
 import { AppointmentController } from './appointment.controller';
-import { Module } from '@nestjs/common';
+import { Module, Scope } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppointmentRepository } from './appointment.repository';
 import { PassportModule } from '@nestjs/passport';
 import { AuthenticationModule } from '../authentication/authentication.module';
+import * as moment from 'moment';
 
 @Module({
   imports: [
@@ -21,6 +22,13 @@ import { AuthenticationModule } from '../authentication/authentication.module';
     DoctorModule,
   ],
   controllers: [AppointmentController],
-  providers: [AppointmentService],
+  providers: [
+    AppointmentService,
+    {
+      provide: 'MomentWrapper',
+      useFactory: async () => moment(),
+      scope: Scope.REQUEST,
+    },
+  ],
 })
 export class AppointmentModule {}

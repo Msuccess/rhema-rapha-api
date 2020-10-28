@@ -2,18 +2,20 @@ import { DoctorService } from './../doctor/doctor.service';
 import { PatientService } from './../patient/patient.service';
 import { AppointmentMailDto } from './dto/appointment_mail.dto';
 import { EmailService } from './../shared/service/email.service';
-import { Injectable, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpStatus, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AppointmentRepository } from './appointment.repository';
 import { QueryModel } from '../shared/model/query.model';
 import { ResultException } from '../configuration/exceptions/result';
 import { AppointmentDto } from './dto/appointment.dto';
 import { CronExpression, Cron } from '@nestjs/schedule';
-import { Raw } from 'typeorm';
+import { MoreThanOrEqual, Raw } from 'typeorm';
+import * as moment from 'moment';
 
 @Injectable()
 export class AppointmentService {
   constructor(
+    @Inject('MomentWrapper') private momentWrapper: moment.Moment,
     @InjectRepository(AppointmentRepository)
     private readonly appointmentRepository: AppointmentRepository,
     private readonly emailService: EmailService,
@@ -27,6 +29,7 @@ export class AppointmentService {
     doctorId: string,
   ) {
     return await this.appointmentRepository.find({
+      order: { date: 'DESC' },
       where: {
         date: appointmentDate,
         appointmentTime: time,
@@ -38,12 +41,14 @@ export class AppointmentService {
   public async getAppointmentByUser(user: any): Promise<any> {
     try {
       const patient = await this.patientService.getPatientByEmail(user.email);
+      const today = new Date();
 
       return await this.appointmentRepository.find({
+        order: { date: 'DESC' },
         where: {
           patientId: patient.id,
           isCanceled: false,
-          createdAt: Raw(alias => `${alias} > NOW()`),
+          date: MoreThanOrEqual(today),
         },
       });
     } catch (error) {
@@ -53,12 +58,14 @@ export class AppointmentService {
 
   public async getAppointmentByDoctorId(user: any): Promise<any> {
     try {
+      const today = new Date();
       const doctor = await this.doctorService.getDoctorByEmail(user.email);
 
       return await this.appointmentRepository.find({
+        order: { date: 'DESC' },
         where: {
           doctorId: doctor.id,
-          createdAt: Raw(alias => `${alias} > NOW()`),
+          date: MoreThanOrEqual(today),
         },
       });
     } catch (error) {
@@ -68,11 +75,19 @@ export class AppointmentService {
 
   public async getAppointments(query: QueryModel): Promise<any> {
     try {
-      return await this.appointmentRepository.find({
+      const today = moment();
+      const time = today.format('LT');
+      const r = await this.appointmentRepository.find({
         take: query.pageSize,
         skip: query.pageSize * (query.page - 1),
-        order: { createdAt: 'DESC' },
+        order: { date: 'DESC' },
+        where: {
+          date: MoreThanOrEqual(today),
+          appointmentTime: MoreThanOrEqual(time),
+        },
       });
+
+      return r;
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
@@ -80,10 +95,13 @@ export class AppointmentService {
 
   public async getDoctorAppointment(id: string): Promise<any> {
     try {
+      const today = new Date();
+
       return await this.appointmentRepository.find({
+        order: { date: 'DESC' },
         where: {
           doctorId: id,
-          createdAt: Raw(alias => `${alias} > NOW()`),
+          date: MoreThanOrEqual(today),
         },
       });
     } catch (error) {

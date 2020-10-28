@@ -1,75 +1,76 @@
+import { Type } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { IsDate, IsDateString, IsNotEmpty, IsString } from 'class-validator';
 
 export class AppointmentDto {
   public id: string;
 
   @ApiProperty()
-  public  description: string;
+  public description: string;
 
   @ApiProperty()
   @IsDateString({ message: 'Date is not valid' })
   @IsNotEmpty({ message: 'Date is not provided' })
-  public  date: Date;
+  public date: Date;
 
   @ApiProperty()
   @IsNotEmpty({ message: 'Time is not provided' })
   @IsString()
-  public  appointmentTime: string;
+  public appointmentTime: string;
 
   @ApiProperty()
   @IsNotEmpty({ message: 'Type is not provided' })
   @IsString()
-  public  type: string;
+  public type: string;
 
   @ApiProperty()
   @IsNotEmpty({ message: 'Appointment Day is not provided' })
   @IsString()
-  public  appointmentDay: string;
+  public appointmentDay: string;
 
   @ApiProperty()
   @IsNotEmpty({ message: 'Doctor Id is not provided' })
-  public  doctorId: string;
+  public doctorId: string;
 
   @ApiProperty()
   @IsNotEmpty({ message: 'Patient Id is not provided' })
   public patientId: string;
 
-  isCanceled:boolean;
+  isCanceled: boolean;
 }
 
 export class AppointmentPatientDto {
-  public  id: string;
+  public id: string;
 
   @ApiProperty()
-  public  description: string;
+  public description: string;
 
   @ApiProperty()
   @IsDateString({ message: 'Date is not valid' })
   @IsNotEmpty({ message: 'Date is not provided' })
-  public  date: Date;
+  public date: Date;
 
   @ApiProperty()
   @IsNotEmpty({ message: 'Time is not provided' })
   @IsString()
-  public  appointmentTime: string;
+  public appointmentTime: string;
 
   @ApiProperty()
   @IsNotEmpty({ message: 'Type is not provided' })
   @IsString()
-  public  type: string;
+  public type: string;
 
   @ApiProperty()
   @IsNotEmpty({ message: 'Appointment Day is not provided' })
   @IsString()
-  public  appointmentDay: string;
+  public appointmentDay: string;
 
   @ApiProperty()
   @IsNotEmpty({ message: 'Doctor Id is not provided' })
-  public  doctorId: string;
+  public doctorId: string;
 
   @ApiProperty()
   public patientId: string;
 
-  isCanceled:boolean;
+  isCanceled: boolean;
 }

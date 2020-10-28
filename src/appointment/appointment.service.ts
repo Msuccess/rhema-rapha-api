@@ -41,7 +41,6 @@ export class AppointmentService {
 
     const dateString = moment(appointmentDate).format('LL');
     const booked = await this.appointmentRepository.find({
-      order: { date: 'DESC' },
       where: {
         dateStr: dateString,
         appointmentTime: time.toString(),
@@ -88,7 +87,7 @@ export class AppointmentService {
       const patient = await this.patientService.getPatientByEmail(user.email);
       const today = moment().format('LL');
 
-      const r = await this.appointmentRepository.find({
+      return await this.appointmentRepository.find({
         order: { date: 'DESC' },
         where: {
           isCanceled: false,
@@ -97,7 +96,7 @@ export class AppointmentService {
         },
       });
 
-      return r;
+    
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
@@ -131,8 +130,7 @@ export class AppointmentService {
         skip: query.pageSize * (query.page - 1),
         order: { date: 'DESC' },
         where: {
-          date: MoreThanOrEqual(today),
-          appointmentTime: MoreThanOrEqual(time),
+          dateStr: MoreThanOrEqual(today),
         },
       });
 
@@ -145,14 +143,12 @@ export class AppointmentService {
   public async getDoctorAppointments(id: string): Promise<any> {
     try {
       const today = moment().format('LL');
-      const time = moment().format('LT');
 
       return await this.appointmentRepository.find({
         order: { date: 'DESC' },
         where: {
           doctorId: id,
           dateStr: MoreThanOrEqual(today),
-          appointmentTime: MoreThanOrEqual(time),
         },
       });
     } catch (error) {

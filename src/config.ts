@@ -28,6 +28,7 @@ export const emailSettings = {
   username: 'rhemaraphaapp@gmail.com',
   password: 'rhemaApp20',
   fromEmail: 'rhemaraphaapp@gmail.com',
+  secure: false,
 };
 
 export const SECRET = 'secret-key2';

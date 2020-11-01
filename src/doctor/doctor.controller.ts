@@ -1,5 +1,5 @@
 import { User } from '../common/decorators/current-user.decorator';
-import { PasswordEncrypterService } from './../authentication/auth-configuration/password-encrypter.service';
+import { PasswordEncrypterService } from '../authentication/passport/password-encrypter.service';
 import {
   Controller,
   Get,

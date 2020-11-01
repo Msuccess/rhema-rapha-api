@@ -173,7 +173,7 @@ export class AppointmentService {
 
         if (!appointment || Object.keys(appointment).length !== 0) {
           const emailDetail = await this.getAppointment(appointment.id);
-          this.appointmentBookingNotification(emailDetail);
+          this.addedAppointmentNotification(emailDetail);
         }
       }
     } catch (error) {
@@ -204,7 +204,7 @@ export class AppointmentService {
 
         if (!appointment || Object.keys(appointment).length !== 0) {
           const emailDetail = await this.getAppointment(appointment.id);
-          this.appointmentBookingNotification(emailDetail);
+          this.addedAppointmentNotification(emailDetail);
         }
       }
     } catch (error) {
@@ -261,33 +261,37 @@ export class AppointmentService {
     }
   }
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  // @Cron(CronExpression.EVERY_10_SECONDS)
   // @Cron(CronExpression.EVERY_5_HOURS)
-  public async getAppointNotification() {
+  private async appointmentReminder() {
     try {
-      // const yesterday = 'NOW() - INTERVAL 6 HOUR';
-      // console.log('>>>>>>', yesterday);
-      const appointments = await this.appointmentRepository.find({
-        where: {
-          // date: Raw(alias => `${alias} = ${yesterday}`),
-          isCanceled: false,
-          date: Raw(alias => `${alias} < NOW()`),
-        },
-      });
+      const now = moment();
+      const duration = moment.duration(now.diff(''), 'h');
 
-      appointments.forEach(appointment => {
-        const appointmentMail = new AppointmentMailDto();
-        appointmentMail.appointmentTime = appointment.appointmentTime;
-        appointmentMail.date = appointment.date;
-        appointmentMail.doctorFullName = appointment.doctor.fullName;
-        appointmentMail.doctorPhoneNumber = appointment.doctor.phonenumber;
-        appointmentMail.patientEmail = appointment.patient.email;
-        appointmentMail.patientFullName = appointment.patient.fullName;
+      console.log(duration);
+      const appointments = await this.appointmentRepository
+        .find({
+          where: {
+            isCanceled: false,
+          },
+        })
+        .catch(error => console.log('>>>>>>>>>>', error));
 
-        this.emailService.appointmentAddedNotifyEmailWithTemplate(
-          appointmentMail,
-        );
-      });
+      // if (appointments) {
+      //   appointments.forEach(appointment => {
+      //     const appointmentMail = new AppointmentMailDto();
+      //     appointmentMail.appointmentTime = appointment.appointmentTime;
+      //     appointmentMail.date = appointment.date;
+      //     appointmentMail.doctorFullName = appointment.doctor.fullName;
+      //     appointmentMail.doctorPhoneNumber = appointment.doctor.phonenumber;
+      //     appointmentMail.patientEmail = appointment.patient.email;
+      //     appointmentMail.patientFullName = appointment.patient.fullName;
+
+      //     this.emailService
+      //       .appointmentReminderSendEmail(appointmentMail)
+      //       .catch(error => console.log('>>>>>>>>>>', error));
+      //   });
+      // }
 
       console.log('Appointment', appointments);
       return;
@@ -296,7 +300,7 @@ export class AppointmentService {
     }
   }
 
-  private async appointmentBookingNotification(appointment: AppointmentEntity) {
+  private async addedAppointmentNotification(appointment: AppointmentEntity) {
     try {
       const appointmentMail = new AppointmentMailDto();
       appointmentMail.appointmentTime = appointment.appointmentTime;
@@ -306,7 +310,7 @@ export class AppointmentService {
       appointmentMail.patientEmail = appointment.patient.email;
       appointmentMail.patientFullName = appointment.patient.fullName;
 
-      this.emailService.appointmentReminderEmailTemplate(appointmentMail);
+      this.emailService.appointmentAddedNotifySendEmail(appointmentMail);
 
       console.log('Appointment', appointment);
       return;

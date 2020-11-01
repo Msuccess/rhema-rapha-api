@@ -4,7 +4,7 @@ import { IdentityUserService } from './identity-user/identity-user.service';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { EXPIRESIN } from '../configuration/config';
-import { PasswordEncrypterService } from './auth-configuration/password-encrypter.service';
+import { PasswordEncrypterService } from './passport/password-encrypter.service';
 import { IdentityUserDto } from './identity-user/dto/identity-user.dto';
 import { ResultException } from '../configuration/exceptions/result';
 import { DoctorService } from '../doctor/doctor.service';
@@ -133,6 +133,10 @@ export class AuthenticationService {
     } catch (error) {
       return new ResultException(error, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  public async forgottenPassword(email: string) {
+    const dbUser = await this.identityUserService.getUserByEmail(email);
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

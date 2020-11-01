@@ -1,5 +1,5 @@
 import { AuthenticationModule } from './../authentication/authentication.module';
-import { PasswordEncrypterService } from './../authentication/auth-configuration/password-encrypter.service';
+import { PasswordEncrypterService } from '../authentication/passport/password-encrypter.service';
 import { DoctorService } from './doctor.service';
 import { Module } from '@nestjs/common';
 import { DoctorController } from './doctor.controller';

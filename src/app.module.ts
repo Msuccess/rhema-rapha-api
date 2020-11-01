@@ -1,4 +1,3 @@
-import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,12 +12,8 @@ import { PatientModule } from './patient/patient.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { APP_FILTER } from '@nestjs/core';
-import { AllExceptionsFilter } from './configuration/exceptions/exception.filter';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { emailSettings } from './config';
-import { join } from 'path';
 import { AnalyticsModule } from './analytics/analytics.module';
-const path = join(__dirname, '../src/template/');
+import { AllExceptionsFilter } from './common/filters/all-exception.filter';
 
 @Module({
   imports: [
@@ -31,30 +26,6 @@ const path = join(__dirname, '../src/template/');
     AuthenticationModule,
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot(),
-    MailerModule.forRoot({
-      transport: {
-        host: emailSettings.primaryDomain,
-        port: emailSettings.primaryPort,
-        tls: {
-          ciphers: 'SSLv3',
-        },
-        secure: false, // true for 465, pr
-        auth: {
-          user: emailSettings.fromEmail, // generated ethereal user
-          pass: emailSettings.password, // generated ethereal password
-        },
-      },
-      defaults: {
-        from: emailSettings.fromEmail,
-      },
-      template: {
-        dir: path,
-        adapter: new EjsAdapter(), // or new PugAdapter() or new EjsAdapter()
-        options: {
-          strict: true,
-        },
-      },
-    }),
     AnalyticsModule,
   ],
   controllers: [AppController],

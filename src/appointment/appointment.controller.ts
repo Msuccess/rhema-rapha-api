@@ -4,7 +4,6 @@ import {
   Controller,
   Get,
   Res,
-  Query,
   HttpStatus,
   Param,
   Post,
@@ -20,9 +19,9 @@ import { AppointmentDto, AppointmentPatientDto } from './dto/appointment.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../common/guards/role.guard';
 import { Roles } from '../common/decorators/role.decorator';
-import { QueryModel } from '../shared/model/query.model';
 import { User } from '../common/decorators/current-user.decorator';
 import { ApiTags } from '@nestjs/swagger';
+import { DatePipe } from 'src/common/pipes/date.pipe';
 
 @ApiTags('Appointment')
 @Controller('appointment')
@@ -78,7 +77,7 @@ export class AppointmentController {
 
   @Post()
   @Roles('admin', 'doctor', 'patient')
-  @UsePipes(ValidationPipe)
+  @UsePipes(ValidationPipe, DatePipe)
   public async create(
     @Body() appointment: AppointmentDto,
     @Res() res: Response,

@@ -16,8 +16,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { RoleGuard } from '../authentication/auth-guard/role.guard';
-import { Roles } from '../authentication/auth-guard/role.decorator';
+import { RoleGuard } from '../common/guards/role.guard';
+import { Roles } from '../common/decorators/role.decorator';
 import { QueryModel } from '../shared/model/query.model';
 import { MedicationDto } from './dto/medication.dto';
 import { ApiTags } from '@nestjs/swagger';

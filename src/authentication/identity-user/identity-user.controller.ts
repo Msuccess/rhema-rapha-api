@@ -1,6 +1,5 @@
-import { User } from './../auth-guard/current-user.decorator';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { Roles } from './../auth-guard/role.decorator';
+import { Roles } from '../../common/decorators/role.decorator';
 import {
   Controller,
   Post,
@@ -16,7 +15,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { ValidatorPipe } from '../../shared/pipes/validator.pipe';
+import { ValidatorPipe } from '../../common/pipes/validator.pipe';
 import { AuthenticationService } from '../authentication.service';
 import { AuthGuard } from '@nestjs/passport';
 import { IdentityUserService } from './identity-user.service';

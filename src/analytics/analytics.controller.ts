@@ -1,5 +1,5 @@
-import { Roles } from './../authentication/auth-guard/role.decorator';
-import { RoleGuard } from './../authentication/auth-guard/role.guard';
+import { Roles } from '../common/decorators/role.decorator';
+import { RoleGuard } from '../common/guards/role.guard';
 import { Controller, Get, HttpStatus, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';

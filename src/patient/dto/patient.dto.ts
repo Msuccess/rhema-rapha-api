@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsEmail, IsDateString, IsString } from 'class-validator';
-import { UserRole } from '../../shared/user-base.entity';
+import { UserRole } from '../../common/entity/user-base.entity';
 
 export class PatientDto {
   public readonly id: string;
-  
+
   @ApiProperty()
   @IsNotEmpty({ message: 'Date of Birth must be provided' })
   public dateOfBirth: Date;
@@ -42,6 +42,6 @@ export class PatientDto {
   gender: string;
 
   userId: string;
-  isDeleted:boolean;
+  isDeleted: boolean;
   public role: UserRole;
 }

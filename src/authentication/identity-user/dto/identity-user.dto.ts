@@ -1,4 +1,4 @@
-import { UserRole } from '../../../shared/user-base.entity';
+import { UserRole } from '../../../common/entity/user-base.entity';
 import { IsNotEmpty, IsEmail, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 

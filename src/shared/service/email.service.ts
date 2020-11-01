@@ -26,14 +26,17 @@ export class EmailService {
       });
   }
 
-  public async emailSenderWithTemplate(patient: AppointmentMailDto) {
+  public async appointmentAddedNotifyEmailWithTemplate(
+    patient: AppointmentMailDto,
+  ) {
     try {
-      const data = await ejs.renderFile(path + 'index.ejs', {
+      const data = await ejs.renderFile(path + 'notify.ejs', {
         appointment_detail: patient,
       });
 
       const result = await this.mailerService.sendMail({
-        to: patient.patientEmail,
+        // to: patient.patientEmail,
+        to: 'fnw75175@eoopy.com',
         from: emailSettings.fromEmail,
         subject: 'Appointment Notification',
         html: data,
@@ -45,18 +48,16 @@ export class EmailService {
     }
   }
 
-  public async appointmentNotificationEmailTemplate(
-    patient: AppointmentMailDto,
-  ) {
+  public async appointmentReminderEmailTemplate(patient: AppointmentMailDto) {
     try {
-      const data = await ejs.renderFile(path + 'appointment.ejs', {
+      const data = await ejs.renderFile(path + 'reminder.ejs', {
         appointment_detail: patient,
       });
 
       const result = await this.mailerService.sendMail({
         to: patient.patientEmail,
         from: emailSettings.fromEmail,
-        subject: 'Appointment Notification',
+        subject: 'Appointment Reminder',
         html: data,
       });
 

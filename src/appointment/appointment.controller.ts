@@ -18,10 +18,10 @@ import {
 import { AppointmentService } from './appointment.service';
 import { AppointmentDto, AppointmentPatientDto } from './dto/appointment.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { RoleGuard } from '../authentication/auth-guard/role.guard';
-import { Roles } from '../authentication/auth-guard/role.decorator';
+import { RoleGuard } from '../common/guards/role.guard';
+import { Roles } from '../common/decorators/role.decorator';
 import { QueryModel } from '../shared/model/query.model';
-import { User } from '../authentication/auth-guard/current-user.decorator';
+import { User } from '../common/decorators/current-user.decorator';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Appointment')
@@ -32,11 +32,8 @@ export class AppointmentController {
 
   @Get('/all')
   @Roles('admin')
-  public async getAppointments(
-    @Res() res: Response,
-    @Query() query: QueryModel,
-  ) {
-    const response = await this.appointmentService.getAppointments(query);
+  public async getAppointments(@Res() res: Response) {
+    const response = await this.appointmentService.getAppointments();
     return res
       .status(HttpStatus.OK)
       .json({ message: 'All Appointments data', data: response });

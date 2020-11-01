@@ -1,5 +1,5 @@
 import { Column, Entity, Timestamp, OneToMany, ManyToOne } from 'typeorm';
-import { SharedBaseEntity } from '../shared/shared-base.entity';
+import { SharedBaseEntity } from '../common/entity/shared-base.entity';
 import { PatientEntity } from '../patient/patient.entity';
 
 @Entity({ name: 'MedicationTbl' })

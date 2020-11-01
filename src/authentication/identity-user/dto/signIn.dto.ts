@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, Length, IsEmail } from 'class-validator';
-import { UserRole } from '../../../shared/user-base.entity';
+import { UserRole } from '../../../common/entity/user-base.entity';
 
 export class SignInDto {
   @ApiProperty()

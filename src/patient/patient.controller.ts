@@ -13,12 +13,12 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from '../authentication/auth-guard/role.decorator';
+import { Roles } from '../common/decorators/role.decorator';
 import { QueryModel } from '../shared/model/query.model';
-import { RoleGuard } from '../authentication/auth-guard/role.guard';
+import { RoleGuard } from '../common/guards/role.guard';
 import { PatientService } from './patient.service';
 import { Response } from 'express';
-import { User } from '../authentication/auth-guard/current-user.decorator';
+import { User } from '../common/decorators/current-user.decorator';
 import { ApiTags } from '@nestjs/swagger';
 @ApiTags('Patient')
 @Controller('patient')

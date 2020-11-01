@@ -3,10 +3,9 @@ import { DoctorService } from './../doctor/doctor.service';
 import { PatientService } from './../patient/patient.service';
 import { AppointmentMailDto } from './dto/appointment_mail.dto';
 import { EmailService } from './../shared/service/email.service';
-import { Injectable, HttpStatus, Inject } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AppointmentRepository } from './appointment.repository';
-import { QueryModel } from '../shared/model/query.model';
 import { ResultException } from '../configuration/exceptions/result';
 import { AppointmentDto } from './dto/appointment.dto';
 import { CronExpression, Cron } from '@nestjs/schedule';
@@ -16,7 +15,6 @@ import * as moment from 'moment';
 @Injectable()
 export class AppointmentService {
   constructor(
-    @Inject('MomentWrapper') private momentWrapper: moment.Moment,
     @InjectRepository(AppointmentRepository)
     private readonly appointmentRepository: AppointmentRepository,
     private readonly emailService: EmailService,
@@ -95,8 +93,6 @@ export class AppointmentService {
           dateStr: MoreThanOrEqual(today),
         },
       });
-
-    
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
@@ -120,13 +116,11 @@ export class AppointmentService {
     }
   }
 
-  public async getAppointments(query: QueryModel): Promise<any> {
+  public async getAppointments(): Promise<any> {
     try {
       const today = moment().format('LL');
 
       const r = await this.appointmentRepository.find({
-        take: query.pageSize,
-        skip: query.pageSize * (query.page - 1),
         order: { date: 'DESC' },
         where: {
           dateStr: MoreThanOrEqual(today),
@@ -267,16 +261,17 @@ export class AppointmentService {
     }
   }
 
-  // @Cron(CronExpression.EVERY_10_SECONDS)
-  @Cron(CronExpression.EVERY_12_HOURS)
+  @Cron(CronExpression.EVERY_10_SECONDS)
+  // @Cron(CronExpression.EVERY_5_HOURS)
   public async getAppointNotification() {
     try {
-      const yesterday = 'NOW() - INTERVAL 12 HOUR';
+      // const yesterday = 'NOW() - INTERVAL 6 HOUR';
+      // console.log('>>>>>>', yesterday);
       const appointments = await this.appointmentRepository.find({
         where: {
-          date: Raw(alias => `${alias} = ${yesterday}`),
+          // date: Raw(alias => `${alias} = ${yesterday}`),
           isCanceled: false,
-          // date: Raw(alias => `${alias} < NOW()`),
+          date: Raw(alias => `${alias} < NOW()`),
         },
       });
 
@@ -289,13 +284,15 @@ export class AppointmentService {
         appointmentMail.patientEmail = appointment.patient.email;
         appointmentMail.patientFullName = appointment.patient.fullName;
 
-        this.emailService.emailSenderWithTemplate(appointmentMail);
+        this.emailService.appointmentAddedNotifyEmailWithTemplate(
+          appointmentMail,
+        );
       });
 
       console.log('Appointment', appointments);
       return;
     } catch (error) {
-      return new ResultException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      console.log(error);
     }
   }
 
@@ -309,12 +306,12 @@ export class AppointmentService {
       appointmentMail.patientEmail = appointment.patient.email;
       appointmentMail.patientFullName = appointment.patient.fullName;
 
-      this.emailService.appointmentNotificationEmailTemplate(appointmentMail);
+      this.emailService.appointmentReminderEmailTemplate(appointmentMail);
 
       console.log('Appointment', appointment);
       return;
     } catch (error) {
-      return new ResultException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException({ message: error }, HttpStatus.BAD_REQUEST);
     }
   }
 }

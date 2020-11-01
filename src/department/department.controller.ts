@@ -1,4 +1,4 @@
-import { RoleGuard } from './../authentication/auth-guard/role.guard';
+import { RoleGuard } from '../common/guards/role.guard';
 import {
   Controller,
   Get,
@@ -15,7 +15,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { DepartmentService } from './department.service';
-import { Roles } from '../authentication/auth-guard/role.decorator';
+import { Roles } from '../common/decorators/role.decorator';
 import { QueryModel } from '../shared/model/query.model';
 import { DepartmentDto } from './dto/department.dto';
 import { Response } from 'express';

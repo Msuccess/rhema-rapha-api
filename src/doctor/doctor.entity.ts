@@ -1,4 +1,4 @@
-import { UserBaseEntity } from '../shared/user-base.entity';
+import { UserBaseEntity } from '../common/entity/user-base.entity';
 import { Column, Entity, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { DepartmentEntity } from '../department/department.entity';
 import { AppointmentEntity } from '../appointment/appointment.entity';
@@ -13,7 +13,6 @@ export class DoctorEntity extends UserBaseEntity {
 
   @Column({ type: 'varchar', nullable: false })
   timesAvailable: string;
-
 
   @ManyToOne(
     () => DepartmentEntity,

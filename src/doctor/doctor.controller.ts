@@ -1,4 +1,4 @@
-import { User } from './../authentication/auth-guard/current-user.decorator';
+import { User } from '../common/decorators/current-user.decorator';
 import { PasswordEncrypterService } from './../authentication/auth-configuration/password-encrypter.service';
 import {
   Controller,
@@ -12,13 +12,13 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { Roles } from '../authentication/auth-guard/role.decorator';
+import { Roles } from '../common/decorators/role.decorator';
 import { QueryModel } from '../shared/model/query.model';
 import { Response } from 'express';
 import { DoctorService } from './doctor.service';
 import { DoctorDto } from './dto/doctor.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { RoleGuard } from '../authentication/auth-guard/role.guard';
+import { RoleGuard } from '../common/guards/role.guard';
 import { ApiTags } from '@nestjs/swagger';
 @ApiTags('Doctor')
 @Controller('doctor')

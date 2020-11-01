@@ -9,7 +9,7 @@ import { IdentityUserDto } from './identity-user/dto/identity-user.dto';
 import { ResultException } from '../configuration/exceptions/result';
 import { DoctorService } from '../doctor/doctor.service';
 import { PatientService } from '../patient/patient.service';
-import { UserRole } from '../shared/user-base.entity';
+import { UserRole } from '../common/entity/user-base.entity';
 import { RegisterDto } from './identity-user/dto/register.dto';
 import { ChangePasswordDto } from './identity-user/dto/change-password.dto';
 

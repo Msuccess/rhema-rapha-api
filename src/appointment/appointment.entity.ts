@@ -1,6 +1,6 @@
 import { DoctorEntity } from './../doctor/doctor.entity';
 import { PatientEntity } from './../patient/patient.entity';
-import { SharedBaseEntity } from '../shared/shared-base.entity';
+import { SharedBaseEntity } from '../common/entity/shared-base.entity';
 import { Column, Entity, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity({ name: 'AppointmentTbl' })

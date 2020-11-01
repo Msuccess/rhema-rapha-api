@@ -1,4 +1,4 @@
-import { UserBaseEntity } from '../shared/user-base.entity';
+import { UserBaseEntity } from '../common/entity/user-base.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { AppointmentEntity } from '../appointment/appointment.entity';
 
@@ -6,8 +6,6 @@ import { AppointmentEntity } from '../appointment/appointment.entity';
 export class PatientEntity extends UserBaseEntity {
   @Column({ type: Date, nullable: false })
   dateOfBirth: Date;
-
- 
 
   @Column({ type: 'varchar', nullable: true })
   gender: string;

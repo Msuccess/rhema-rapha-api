@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsEmail } from 'class-validator';
-import { UserRole } from '../../shared/user-base.entity';
+import { UserRole } from '../../common/entity/user-base.entity';
 
 export class GetDoctorDto {
   public readonly id: string;
@@ -36,8 +36,8 @@ export class GetDoctorDto {
   @IsNotEmpty({ message: 'Password cannot be null' })
   public password: string;
 
-  isDeleted:boolean;
+  isDeleted: boolean;
   userId: string;
 
   public role: UserRole;
-       }
+}

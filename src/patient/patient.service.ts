@@ -50,7 +50,11 @@ export class PatientService {
 
   public async getPatientByEmail(email: string): Promise<PatientDto> {
     try {
-      return await this.patientRepository.findOne({ email });
+      return await this.patientRepository.findOne({
+        where:{
+        email:email,
+        isDeleted:false
+      }});
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }

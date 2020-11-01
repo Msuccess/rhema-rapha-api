@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppointmentRepository } from './appointment.repository';
 import { PassportModule } from '@nestjs/passport';
 import { AuthenticationModule } from '../authentication/authentication.module';
+import { AppointmentNotificationService } from './appointment-notification/appointment-notification.service';
 import * as moment from 'moment';
 
 @Module({
@@ -29,6 +30,7 @@ import * as moment from 'moment';
       useFactory: async () => moment(),
       scope: Scope.REQUEST,
     },
+    AppointmentNotificationService,
   ],
 })
 export class AppointmentModule {}

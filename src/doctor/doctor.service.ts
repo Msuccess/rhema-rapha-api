@@ -22,9 +22,9 @@ export class DoctorService {
         take: query.pageSize,
         skip: query.pageSize * (query.page - 1),
         order: { createdAt: 'DESC' },
-        where:{
-           isDeleted:false
-        }
+        where: {
+          isDeleted: false,
+        },
       });
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
@@ -44,9 +44,9 @@ export class DoctorService {
   public async getDoctor(id: string): Promise<GetDoctorDto> {
     try {
       return await this.doctorRepository.findOne({
-        where: { 
+        where: {
           id: id,
-          isDeleted:false 
+          isDeleted: false,
         },
         relations: ['department'],
       });
@@ -75,16 +75,15 @@ export class DoctorService {
     try {
       const dbDoctor = await this.getDoctorByEmail(email);
 
-    if (dbDoctor) {
-      dbDoctor.password = password;
-      return await this.doctorRepository.update(dbDoctor.id, dbDoctor);
-    } else {
-      new ResultException('User not found', HttpStatus.NOT_FOUND);
-    }
+      if (dbDoctor) {
+        dbDoctor.password = password;
+        return await this.doctorRepository.update(dbDoctor.id, dbDoctor);
+      } else {
+        new ResultException('User not found', HttpStatus.NOT_FOUND);
+      }
     } catch (error) {
       return new ResultException(error, HttpStatus.BAD_REQUEST);
     }
-    
   }
 
   public async updateDoctor(id: string, newDoctor: DoctorDto) {
@@ -102,30 +101,29 @@ export class DoctorService {
 
   public async deleteDoctor(id: string) {
     try {
-      const dbDoctor = await this.getDoctor(id);
-      if (dbDoctor) {
-         const doc = new DoctorDto();
-         doc.address = dbDoctor.address;
-         doc.isDeleted = true;
-        doc.daysAvailable = dbDoctor.daysAvailable;
-         doc.departmentId = dbDoctor.departmentId;
-         doc.email = dbDoctor.email;
-         doc.fullName = dbDoctor.fullName;
-         doc.password = dbDoctor.password;
-         doc.phonenumber = dbDoctor.phonenumber;
-         doc.role = dbDoctor.role;
-         doc.timesAvailable = dbDoctor.timesAvailable;
-    doc.userId = dbDoctor.userId;
-        
-        return await this.doctorRepository.update(id, doc);
-      } else {
-        new ResultException('User not found', HttpStatus.NOT_FOUND);
-      }
+      //   const dbDoctor = await this.getDoctor(id);
+      //   if (dbDoctor) {
+      //      const doc = new DoctorDto();
+      //      doc.address = dbDoctor.address;
+      //      doc.isDeleted = true;
+      //     doc.daysAvailable = dbDoctor.daysAvailable;
+      //      doc.departmentId = dbDoctor.departmentId;
+      //      doc.email = dbDoctor.email;
+      //      doc.fullName = dbDoctor.fullName;
+      //      doc.password = dbDoctor.password;
+      //      doc.phonenumber = dbDoctor.phonenumber;
+      //      doc.role = dbDoctor.role;
+      //      doc.timesAvailable = dbDoctor.timesAvailable;
+      // doc.userId = dbDoctor.userId;
+
+      //     return await this.doctorRepository.update(id, doc);
+      //   } else {
+      //     new ResultException('User not found', HttpStatus.NOT_FOUND);
+      //   }
       // await this.doctorRepository.query(`DELETE FROM public."AppointmentTbl" WHERE "doctorId" = '${id}'`);
-      // return await this.doctorRepository.delete(id);
+      return await this.doctorRepository.delete(id);
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
   }
-
 }

@@ -25,6 +25,7 @@ export class PatientEntity extends UserBaseEntity {
   @OneToMany(
     () => AppointmentEntity,
     appointment => appointment.patient,
+    { onDelete: 'CASCADE' },
   )
   appointment: AppointmentEntity[];
 

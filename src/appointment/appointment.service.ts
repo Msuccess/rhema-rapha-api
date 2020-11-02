@@ -9,7 +9,7 @@ import { AppointmentRepository } from './appointment.repository';
 import { ResultException } from '../configuration/exceptions/result';
 import { AppointmentDto } from './dto/appointment.dto';
 import { CronExpression, Cron } from '@nestjs/schedule';
-import { MoreThanOrEqual, Raw } from 'typeorm';
+import { MoreThanOrEqual } from 'typeorm';
 import * as moment from 'moment';
 
 @Injectable()

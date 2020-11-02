@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, JoinColumn } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { SharedBaseEntity } from '../common/entity/shared-base.entity';
 import { DoctorEntity } from '../doctor/doctor.entity';
 
@@ -13,7 +13,7 @@ export class DepartmentEntity extends SharedBaseEntity {
   @OneToMany(
     () => DoctorEntity,
     doctor => doctor.department,
-    { cascade: true, eager: true },
+    { cascade: true, eager: true, onDelete: 'CASCADE' },
   )
   doctor: DoctorEntity[];
 }

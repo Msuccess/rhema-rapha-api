@@ -30,7 +30,7 @@ export class PatientController {
   ) {}
 
   @Get('all')
-  @Roles('admin')
+  @Roles('admin', 'doctor')
   public async getPatients(
     @Res() res: Response,
     @Query() query: QueryModel,

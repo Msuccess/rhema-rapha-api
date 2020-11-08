@@ -32,7 +32,7 @@ export class AppointmentEntity extends SharedBaseEntity {
   @ManyToOne(
     () => DoctorEntity,
     doctor => doctor.appointment,
-    { eager: true },
+    { eager: true, onDelete: 'CASCADE' },
   )
   @JoinColumn({ name: 'doctorId' })
   doctor: DoctorEntity;
@@ -40,7 +40,7 @@ export class AppointmentEntity extends SharedBaseEntity {
   @ManyToOne(
     () => PatientEntity,
     patient => patient.appointment,
-    { eager: true },
+    { eager: true, onDelete: 'CASCADE' },
   )
   @JoinColumn({ name: 'patientId' })
   patient: PatientEntity;

@@ -37,10 +37,9 @@ export class AppointmentService {
       );
     }
 
-    const dateString = moment(appointmentDate).format('LL');
     const booked = await this.appointmentRepository.find({
       where: {
-        dateStr: dateString,
+        date: appointmentDate,
         appointmentTime: time.toString(),
         doctorId: doctorId,
       },
@@ -83,16 +82,16 @@ export class AppointmentService {
   public async getAppointmentByUser(user: any): Promise<any> {
     try {
       const patient = await this.patientService.getPatientByEmail(user.email);
-      const today = moment().format('LL');
-
-      return await this.appointmentRepository.find({
-        order: { date: 'DESC' },
-        where: {
-          isCanceled: false,
-          patientId: patient.id,
-          dateStr: MoreThanOrEqual(today),
-        },
-      });
+      return await this.appointmentRepository
+        .find({
+          order: { date: 'DESC' },
+          where: {
+            isCanceled: false,
+            patientId: patient.id,
+            date: MoreThanOrEqual(new Date()),
+          },
+        })
+        .catch(error => console.log('>>>>>>>>>>', error));
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
@@ -102,15 +101,15 @@ export class AppointmentService {
     try {
       const doctor = await this.doctorService.getDoctorByEmail(user.email);
 
-      const today = moment().format('LL');
-
-      return await this.appointmentRepository.find({
-        order: { date: 'DESC' },
-        where: {
-          doctorId: doctor.id,
-          dateStr: MoreThanOrEqual(today),
-        },
-      });
+      return await this.appointmentRepository
+        .find({
+          order: { date: 'DESC' },
+          where: {
+            doctorId: doctor.id,
+            date: MoreThanOrEqual(new Date()),
+          },
+        })
+        .catch(error => console.log('>>>>>>>>>>', error));
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
@@ -118,16 +117,13 @@ export class AppointmentService {
 
   public async getAppointments(): Promise<any> {
     try {
-      const today = moment().format('LL');
-
-      const r = await this.appointmentRepository.find({
-        order: { date: 'DESC' },
-        where: {
-          dateStr: MoreThanOrEqual(today),
-        },
-      });
-
-      return r;
+      const appointments = await this.appointmentRepository
+        .find({
+          order: { date: 'DESC' },
+          where: { date: MoreThanOrEqual(new Date()) },
+        })
+        .catch(error => console.log('>>>>>>>>>>', error));
+      return appointments;
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
@@ -135,15 +131,15 @@ export class AppointmentService {
 
   public async getDoctorAppointments(id: string): Promise<any> {
     try {
-      const today = moment().format('LL');
-
-      return await this.appointmentRepository.find({
-        order: { date: 'DESC' },
-        where: {
-          doctorId: id,
-          dateStr: MoreThanOrEqual(today),
-        },
-      });
+      return await this.appointmentRepository
+        .find({
+          order: { date: 'DESC' },
+          where: {
+            doctorId: id,
+            date: MoreThanOrEqual(new Date()),
+          },
+        })
+        .catch(error => console.log('>>>>>>>>>>', error));
     } catch (error) {
       new ResultException(error, HttpStatus.BAD_REQUEST);
     }
@@ -261,14 +257,9 @@ export class AppointmentService {
     }
   }
 
-  // @Cron(CronExpression.EVERY_10_SECONDS)
-  // @Cron(CronExpression.EVERY_5_HOURS)
+  @Cron(CronExpression.EVERY_5_HOURS)
   private async appointmentReminder() {
     try {
-      const now = moment();
-      const duration = moment.duration(now.diff(''), 'h');
-
-      console.log(duration);
       const appointments = await this.appointmentRepository
         .find({
           where: {
@@ -277,23 +268,30 @@ export class AppointmentService {
         })
         .catch(error => console.log('>>>>>>>>>>', error));
 
-      // if (appointments) {
-      //   appointments.forEach(appointment => {
-      //     const appointmentMail = new AppointmentMailDto();
-      //     appointmentMail.appointmentTime = appointment.appointmentTime;
-      //     appointmentMail.date = appointment.date;
-      //     appointmentMail.doctorFullName = appointment.doctor.fullName;
-      //     appointmentMail.doctorPhoneNumber = appointment.doctor.phonenumber;
-      //     appointmentMail.patientEmail = appointment.patient.email;
-      //     appointmentMail.patientFullName = appointment.patient.fullName;
+      if (appointments) {
+        appointments.forEach(appointment => {
+          const timeNow = moment();
+          const appointmentTime = moment(appointment.date);
+          const timeDifference = appointmentTime.diff(timeNow, 'hours');
 
-      //     this.emailService
-      //       .appointmentReminderSendEmail(appointmentMail)
-      //       .catch(error => console.log('>>>>>>>>>>', error));
-      //   });
-      // }
+          if (timeDifference === 7) {
+            const appointmentMail = new AppointmentMailDto();
+            appointmentMail.appointmentTime = appointment.appointmentTime;
+            appointmentMail.date = appointment.date;
+            appointmentMail.doctorFullName = appointment.doctor.fullName;
+            appointmentMail.doctorPhoneNumber = appointment.doctor.phonenumber;
+            appointmentMail.patientEmail = appointment.patient.email;
+            appointmentMail.patientFullName = appointment.patient.fullName;
 
-      console.log('Appointment', appointments);
+            this.emailService
+              .appointmentReminderSendEmail(appointmentMail)
+              .catch(error => console.log('>>>>>>>>>>', error));
+
+            console.log('Email Sent', appointmentMail);
+            return;
+          }
+        });
+      }
       return;
     } catch (error) {
       console.log(error);

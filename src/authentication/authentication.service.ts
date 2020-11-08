@@ -25,7 +25,9 @@ export class AuthenticationService {
 
   public async register(data: RegisterDto): Promise<any> {
     try {
-      const dbUser = await this.validateUser(data.email);
+      const dbUser = await this.validateUser(data.email).catch(error =>
+        console.log('>>>>>>>>>>', error),
+      );
 
       if (typeof dbUser === 'object' && dbUser !== null) {
         throw new HttpException(
@@ -64,7 +66,9 @@ export class AuthenticationService {
 
             patientDb.userId = userDb.id;
 
-            this.patientService.updatePatient(patientDb.id, patientDb);
+            this.patientService
+              .updatePatient(patientDb.id, patientDb)
+              .catch(error => console.log('>>>>>>>>>>', error));
             return await this.getJwtToken(userDb);
           }
 
@@ -88,7 +92,10 @@ export class AuthenticationService {
 
             doctorDb.userId = userDb.id;
 
-            this.doctorService.updateDoctor(doctorDb.id, doctorDb);
+            this.doctorService
+              .updateDoctor(doctorDb.id, doctorDb)
+              .catch(error => console.log('>>>>>>>>>>', error));
+
             return await this.getJwtToken(userDb);
           }
 
@@ -109,7 +116,9 @@ export class AuthenticationService {
 
   public async signIn(user: { email: string; password: string }): Promise<any> {
     try {
-      const dbUser = await this.identityUserService.getUserByEmail(user.email);
+      const dbUser = await this.identityUserService
+        .getUserByEmail(user.email)
+        .catch(error => console.log('>>>>>>>>>>', error));
 
       if (!dbUser || Object.keys(dbUser).length === 0) {
         return new ResultException('Wrong credentials', HttpStatus.BAD_REQUEST);
@@ -153,7 +162,9 @@ export class AuthenticationService {
 
       return this.identityUserService.createUser(newUser);
     } else {
-      const dbUser = await this.validateUser(req.user.email);
+      const dbUser = await this.validateUser(req.user.email).catch(error =>
+        console.log('>>>>>>>>>>', error),
+      );
       this.getJwtToken(dbUser);
     }
   }

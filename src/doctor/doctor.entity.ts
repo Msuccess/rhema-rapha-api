@@ -17,6 +17,7 @@ export class DoctorEntity extends UserBaseEntity {
   @ManyToOne(
     () => DepartmentEntity,
     department => department.doctor,
+    { onDelete: 'CASCADE' },
   )
   @JoinColumn({ name: 'departmentId' })
   department: DepartmentEntity;

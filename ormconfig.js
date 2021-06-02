@@ -15,6 +15,7 @@ module.exports = [
     database: 'db13u3lmbv8h7l',
     entities: ['dist/**/*.entity{.ts,.js}'],
     synchronize: true,
+    ssl: true,
   },
   {
     name: 'dev',
